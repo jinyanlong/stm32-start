@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"hallf.h": "c",
+			"haluart.h": "c",
+			"hal24g.h": "c",
+			"form.h": "c",
+			"app_cfg.h": "c",
+			"hal2.4g.h": "c",
+			"sftypes.h": "c"
+		},
+		"files.exclude": {
+			"**/LFActiverSchool": true
+		}
+	}
+}
