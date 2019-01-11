@@ -1,0 +1,30 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"hallf.h": "c",
+			"haluart.h": "c",
+			"hal24g.h": "c",
+			"form.h": "c",
+			"app_cfg.h": "c",
+			"hal2.4g.h": "c",
+			"sftypes.h": "c",
+			"includes.h": "c",
+			"halcpu.h": "c",
+			"exception.h": "c",
+			"racetask.h": "c",
+			"pccomm.h": "c",
+			"racefunc.h": "c",
+			"func_common.h": "c",
+			"halnrf.h": "c",
+			"nrf.h": "c"
+		},
+		"files.exclude": {
+			"**/LFActiverSchool": true
+		}
+	}
+}
