@@ -67,7 +67,7 @@ void hal_NRF_reset(void){
     hal_Nrf_powerOff();
     //ио╣Г
     hal_UART_config(LF_USART);
-    NRF_Power_On();    
+    NRF_Power_On();
 
     delay_ms(300);
 }

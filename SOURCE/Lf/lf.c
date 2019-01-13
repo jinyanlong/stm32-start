@@ -6,7 +6,7 @@ u16 _antId=0x8011;
 
 bool lfSendData(uint16_t data,uint16_t count){
     readyLfSendData(data);
-    return lfSendStart(count);
+    return lfSendStart(1);
 }
 
 bool lfAntCalib(void){//天线校准
