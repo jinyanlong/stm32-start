@@ -38,6 +38,7 @@ void (*drv_CommFunc_Command[])(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp)={
     drv_CommFunc_setApplyData,
     drv_CommFunc_getRecordInfo,
     drv_CommFunc_getRecord,
+    drv_CommFunc_lfSendDataNoAck,
     drv_CommFunc_lfSendData,
     drv_CommFunc_nrfSendData
 };
@@ -63,11 +64,9 @@ void drv_Comm_onCommand(FV_COMMAND* cmdPacket,FV_RESPONSE* rspPacket){
     switch( FVCLA_GETID(cmdPacket->CLA) ){
     case FVCLA_DEVICE:  //常用指令
         drv_CommFunc_call(FUNC_COMMON,cmdPacket->INS,sizeof(FUNC_COMMON)/sizeof(FUNC_COMMON[0]),cmdPacket,rspPacket);
-        fns_SetPcComm_State(PCCOMM_STATE_ACK);
         break;
     case FVCLA_SYSTEM:
         drv_CommFunc_call(FUNC_SECRITY,cmdPacket->INS,sizeof(FUNC_SECRITY)/sizeof(FUNC_SECRITY[0]),cmdPacket,rspPacket);
-        fns_SetPcComm_State(PCCOMM_STATE_ACK);
         break;   
     case FVCLA_SCHOOL:  //参数设置
         drv_CommFunc_call(drv_CommFunc_Command,cmdPacket->INS,sizeof(drv_CommFunc_Command)/sizeof(drv_CommFunc_Command[0]),cmdPacket,rspPacket);

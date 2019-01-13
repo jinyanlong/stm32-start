@@ -112,6 +112,7 @@ void fns_SecrityFunc_setValidate(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 #define ERRCODE_SECRITY_SYSID  (ERRTYPE_COMM+0x0C)    //系统ID不匹配
 #define ERRCODE_SECRITY_VERIFY (ERRTYPE_COMM+0x0D)    //校验失败
 #define ERRCODE_CMD_OVER       (ERRTYPE_COMM+0x0E)     //参数溢出
+#define ERRCODE_CMD_OVERTIME       (ERRTYPE_COMM+0x10)
 //#define ERRTYPE_XXX	      0x0200    //保留给PC端使用
 
 #define ERRTYPE_DEVICE	      0x0300    //器件错误
@@ -121,7 +122,7 @@ void fns_SecrityFunc_setValidate(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 #define ERRCODE_LF_BUSY    (ERRTYPE_LF+0x01)     //lf正在发送数据
 
 
-#define PCCOM_RECV_TIMOUT 500
+#define PCCOM_RECV_TIMOUT 3000
 
 #define PCCOMM_STATE_NOACK 0X00
 #define PCCOMM_STATE_ACK 0XFF //立即回复
@@ -130,6 +131,7 @@ void fns_SecrityFunc_setValidate(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 #define PCCOMM_STATE_GETATTR 0X02
 #define PCCOMM_STATE_INITDEV 0X03
 #define PCCOMM_STATE_READPARA 0X04
+
 
 #define LF_NRFACK 0XA1  //低频发送
     #define LF_CALI 0X80  //天线校准

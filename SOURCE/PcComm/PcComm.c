@@ -30,53 +30,40 @@ void hal_PcComm_config(void){
 	lfDCB.initTypeDef.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
     hal_UART_open(_pcCommUart.pUart,&lfDCB);
 }
-void drv_PcComm_ResetState(void){
-    _pcCommUart.pCRecvTimeout=0;
-    fns_SetPcComm_State(PCCOMM_STATE_NOACK);
-}
-
-void drv_PcComm_CheckState(UInt32 nowTick){
-    if(fns_GetPcComm_State()==PCCOMM_STATE_ACK){
-        if(_pcCommUart.rspPacket.CLA!=0){
-            UInt8 protocol=0x80; //无地址模式
-            drv_Comm_sendPacket(_pcCommUart.pUart,&protocol,&_pcCommUart.rspPacket);
-        }
-        drv_PcComm_ResetState();
-        drv_Comm_startRx(&_pcCommUart);
-    }else if((_pcCommUart.pCRecvTimeout>0)&&(nowTick>_pcCommUart.pCRecvTimeout)){
-        // drv_Comm_sendPacket(_pcCommUart.pUart,&protocol,&_pcCommUart.rspPacket);
-        drv_PcComm_ResetState();
-        drv_Comm_startRx(&_pcCommUart);
-    }
-}
 
 void drv_PcComm_onEvent(void){//数据解析
   
     UART_PACKET_PARSER parser;
-
+    UartPacketHandler *pUartHandler;
+    pUartHandler=&_pcCommUart;
     memset(&_pcCommUart.cmdPacket,0,sizeof(FV_PACKET));
     parser.state=UART_PACKETSTATE_IDLE;    
     parser.stream=(UInt8*)&_pcCommUart.cmdPacket;
     parser.eof=0;
+    _pcCommUart.lazyMode=false;
     
     drv_Comm_parseSTBPacket(&parser,_pcCommUart.stream+1,_pcCommUart.eof-1);
 
     if(parser.state==UART_PACKETSTATE_OK){//表明接收Packet,以下对该包作处理
-        if( FVCLA_GETTYPE(_pcCommUart.cmdPacket.CLA)==FVTYPE_COMMAND ){
-            drv_Comm_onCommand(&_pcCommUart.cmdPacket,&_pcCommUart.rspPacket);
+        if( FVCLA_GETTYPE(pUartHandler->cmdPacket.CLA)==FVTYPE_COMMAND ){
+            drv_Comm_onCommand(&pUartHandler->cmdPacket,&pUartHandler->rspPacket);
+            if(_pcCommUart.lazyMode) return;
+
+            if(pUartHandler->rspPacket.CLA!=0){
+                UInt8 protocol=0x80; //无地址模式
+                drv_Comm_sendPacket(pUartHandler->pUart,&protocol,&pUartHandler->rspPacket);
+            }
         }
+
     }else{
         //错误指令,忽略    
     }
+    drv_Comm_startRx(&_pcCommUart);
 }
 
-void drv_PcComm_stopRx(){
-    _pcCommUart.pCRecvTimeout=drv_Time_getTick()+PCCOM_RECV_TIMOUT;
-    hal_UART_stopRx(_pcCommUart.pUart);
-}
 
 void isr_PcComm_onRx(UInt8 dr){
-     static UInt32 timeout=0;
+    static UInt32 timeout=0;
     UInt32 now=isr_Time_getTick();
     //如果超时,第一个字符必须是CHAR_STB
     if( now > timeout){
@@ -94,7 +81,7 @@ void isr_PcComm_onRx(UInt8 dr){
 
     if(dr==CHAR_ETB){
         if(_pcCommUart.stream[0]==CHAR_STB){
-            drv_PcComm_stopRx();
+            hal_UART_stopRx(_pcCommUart.pUart); 
             isr_Event_raise(EVENT_RX_PCCOMM);
         }else{
             _pcCommUart.eof=0;

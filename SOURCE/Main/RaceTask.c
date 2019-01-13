@@ -108,7 +108,14 @@ bool drv_RaceTask_isReady(void){
 
 
 void drv_RaceTask_doTick(UInt32 nowTick){
-    drv_PcComm_CheckState(nowTick);
+    if(_pcCommUart.lazyMode){
+        if(nowTick>_pcCommUart.rspTimout){
+            UInt8 protocol=0x80; //无地址模式
+            drv_CommFunc_setError(&_pcCommUart.rspPacket,ERRCODE_CMD_OVERTIME);         
+            drv_Comm_sendPacket(_pcCommUart.pUart,&protocol,&_pcCommUart.rspPacket);
+            drv_Comm_startRx(&_pcCommUart);
+        }
+    }
 }
 
 

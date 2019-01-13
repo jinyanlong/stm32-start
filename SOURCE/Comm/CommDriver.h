@@ -72,14 +72,18 @@ typedef struct _UartPacketHandler{
     UInt8   stream[UART_BUFFER_MAXSIZE];  //串口缓冲区
     UInt16  eof;     //缓冲区下一个空位
     
-    bool slaveMode;         //通讯是否处在从模式
-    UInt32 masterAddr;      //主机地址
-    UInt32 slaverAddr;      //从机地址
+    //bool slaveMode;         //通讯是否处在从模式
+    //UInt32 masterAddr;      //主机地址
+    //UInt32 slaverAddr;      //从机地址
     
-    UInt32 pCRecvTimeout;
 
-    FV_RESPONSE cmdPacket;   //指令
-    FV_PACKET rspPacket;  //应答
+
+    UInt8 rspINS; //等待NRF回复的ins
+
+    bool lazyMode;
+    volatile UInt32 rspTimout;
+    FV_COMMAND cmdPacket;   //指令
+    FV_RESPONSE rspPacket;  //应答
 
   
 

@@ -128,11 +128,11 @@ void drv_nrfComm_startRx(NrfUartPacketHandler* pUartHandler){
     hal_UART_startRx(pUartHandler->pUart);
 }
 
-void drv_NrfComm_onEvent(void){ //解析数据
-    FV_RESPONSE *rspData;
+void drv_NrfComm_onEvent_(void){ //解析数据
     UART_PACKET_PARSER parser;
-    bool flag=false;
+    UInt8 tagCLA;
 
+    tagCLA=_pcCommUart.cmdPacket.INS==0x05?LF_NRFACK:NRF_TAG2MCU;
     memset(&_nrfCommUart.cmdPacket,0,sizeof(NRFFV_PACKET));
     parser.state=UART_PACKETSTATE_IDLE;    
     parser.stream=(UInt8*)&_nrfCommUart.cmdPacket;
@@ -140,42 +140,29 @@ void drv_NrfComm_onEvent(void){ //解析数据
 
     drv_NrfComm_parsePacket(&parser,_nrfCommUart.stream+1, _nrfCommUart.eof-1);
 
-    if((parser.state!=UART_PACKETSTATE_OK)||(rspData->LEN<8)||(rspData->CLA==NRF_TAG2MCU)){
-        drv_nrfComm_startRx(&_nrfCommUart);
+    if((parser.state!=UART_PACKETSTATE_OK)||(_nrfCommUart.cmdPacket.LEN<8)||(_nrfCommUart.cmdPacket.CLA!=tagCLA)){
         return;
     }
-
-    switch(fns_GetPcComm_State()){
-        case PCCOMM_STATE_INITDEV:
-            if(rspData->INS==PCCMD_INITDEV){
-                flag=TRUE;
-            }
-            break;
-        case PCCOMM_STATE_READPARA:
-            if(rspData->INS==PCCMD_READPARA){
-                flag=TRUE;
-            }
-            break;
-        case PCCOMM_STATE_CALI:
-            if(rspData->INS==LF_CALI){
-                flag=TRUE;
-            }
-            break;
-        case PCCOMM_STATE_GETATTR:
-            if(rspData->INS==LF_GETATTR){
-                flag=TRUE;
-            }
-            break;         
-        default:
-            drv_nrfComm_startRx(&_nrfCommUart);        
+    if(_nrfCommUart.cmdPacket.INS==_pcCommUart.cmdPacket.PARAMS[1]){
+        memcpy(_pcCommUart.rspPacket.PARAMS,parser.stream+3,parser.eof-4);
+        _pcCommUart.rspPacket.LEN=parser.eof-4;
     }
-    if(flag){
-        memcpy(&_pcCommUart.rspPacket,parser.stream+3,parser.eof-4);
-        fns_SetPcComm_State(PCCOMM_STATE_ACK);
+
+    if(_pcCommUart.rspPacket.CLA!=0){
+        UInt8 protocol=0x80; //无地址模式
+        drv_Comm_sendPacket(_pcCommUart.pUart,&protocol,&_pcCommUart.rspPacket);
+    }
+}
+void drv_NrfComm_onEvent(void){ //解析数据
+    if(_pcCommUart.lazyMode){
+        drv_NrfComm_onEvent_();
+        
+        drv_Comm_startRx(&_pcCommUart);
     }
     drv_nrfComm_startRx(&_nrfCommUart);
-}
 
+}
+    
 
 void isr_NrfComm_onRx(UInt8 dr){
      static UInt32 timeout=0;
@@ -201,8 +188,11 @@ void isr_NrfComm_onRx(UInt8 dr){
         if((_nrfCommUart.eof>1)&&(_nrfCommUart.stream[0]==CHAR_STB)){
             //关闭终端,直到串口指令执行完成
             hal_UART_stopRx(_nrfCommUart.pUart);
-
-            isr_Event_raise(EVENT_RX_NRFCOMM);
+            if(_pcCommUart.lazyMode){
+                isr_Event_raise(EVENT_RX_NRFCOMM);
+            }else{
+                drv_nrfComm_startRx(&_nrfCommUart);
+            }
         }else{
             _nrfCommUart.eof=0;
         }

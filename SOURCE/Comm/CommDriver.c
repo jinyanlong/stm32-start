@@ -149,7 +149,8 @@ void drv_Comm_parseETBPacket(UART_PACKET_PARSER* parser,UInt8* buffer,UInt16 len
 
 void drv_Comm_startRx(UartPacketHandler* pUartHandler){
     //ÊÍ·Å´®¿Ú
-    pUartHandler->pCRecvTimeout=0;
+    pUartHandler->lazyMode=false;
+    pUartHandler->rspTimout=0;
     pUartHandler->eof=0;
     hal_UART_startRx(pUartHandler->pUart);
 }

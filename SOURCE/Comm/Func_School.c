@@ -19,7 +19,7 @@ extern UInt32 s_deviceID;
 extern UInt8 s_systemId[4];
 
 volatile UInt8 _pcCommState=0;
-volatile UInt32 _pCRecvTimeout=0;
+volatile UInt32 _rspTimout=0;
 ////////////////////////////////////////////////////////////////////
 //大部分通讯函数直接操作flash,通讯结束后必须复位退出,以确保内存与Flash同步
 ////////////////////////////////////////////////////////////////////
@@ -227,39 +227,46 @@ void drv_CommFunc_getRecord(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
 }
 
 
-
-void drv_CommFunc_lfSendData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
-    UInt16 cmdData;
-    UInt16 sendCount;
-    memcpy(&cmdData,fvCmd->PARAMS,2);
-    sendCount=fvCmd->PARAMS[2];
-    if((cmdData>>8)==LF_CALI){
-        fns_SetPcComm_State(PCCOMM_STATE_ACK);
-    }else if((cmdData>>8)==LF_GETATTR){
-        fns_SetPcComm_State(PCCOMM_STATE_GETATTR);
-    }else if((cmdData>>8)==LF_CHANGE_REVSTATE){
-        fns_SetPcComm_State(LF_CHANGE_REVSTATE);
-    }else{
-        drv_CommFunc_setError(fvRsp,ERRCODE_UNSUPPORT);
-        fns_SetPcComm_State(PCCOMM_STATE_ACK);
+void drv_CommFunc_lfSendDataNoAck(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
+    UInt16 sendData;
+    if(fvCmd->LEN<2){
+        drv_CommFunc_setError(fvRsp,ERRCODE_PACKET_LEN);
         return;
     }
-    if(lfSendData(cmdData,sendCount)){
-
-    }else{
+    memcpy(&sendData,fvCmd->PARAMS,2);
+    if(!(lfSendData(sendData))){
         drv_CommFunc_setError(fvRsp,ERRCODE_LF_BUSY);
-        fns_SetPcComm_State(PCCOMM_STATE_ACK);
     }
+}
+extern UartPacketHandler _pcCommUart;
+void drv_CommFunc_lfSendData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
+    UInt16 cmdData;
+    if(fvCmd->LEN<2){
+        drv_CommFunc_setError(fvRsp,ERRCODE_PACKET_LEN);
+        return;
+    }
+    memcpy(&cmdData,fvCmd->PARAMS,2);
+    _pcCommUart.rspINS=(cmdData>>8);
+    if(!(lfSendData(cmdData))){
+        drv_CommFunc_setError(fvRsp,ERRCODE_LF_BUSY);
+        return;
+    }
+
+    _pcCommUart.rspTimout=drv_Time_getTick()+PCCOM_RECV_TIMOUT;
+    _pcCommUart.lazyMode=true;
+
 }
 
 void drv_CommFunc_nrfSendData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
-    if(fvCmd->PARAMS[3]==PCCMD_INITDEV){
-        fns_SetPcComm_State(PCCOMM_STATE_INITDEV);
-    }else if(fvCmd->PARAMS[3]==PCCMD_READPARA){
-        fns_SetPcComm_State(PCCOMM_STATE_READPARA);
+    if(fvCmd->LEN<22){
+        drv_CommFunc_setError(fvRsp,ERRCODE_PACKET_LEN);
+        return;
     }
-
+    _pcCommUart.rspINS=(fvCmd->PARAMS[3]);
     drv_Nrf_sendData(fvCmd->PARAMS,fvCmd->LEN);
+
+    _pcCommUart.rspTimout=drv_Time_getTick()+PCCOM_RECV_TIMOUT;
+    _pcCommUart.lazyMode=true;
 }
 
 

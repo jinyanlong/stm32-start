@@ -21,6 +21,7 @@ void drv_CommFunc_getSite(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 void drv_CommFunc_getRecordInfo(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 void drv_CommFunc_getRecord(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 
+void drv_CommFunc_lfSendDataNoAck(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 void drv_CommFunc_lfSendData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 void drv_CommFunc_nrfSendData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 
