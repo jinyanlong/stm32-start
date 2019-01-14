@@ -44,31 +44,6 @@ void hal_AT45DB_configPin(void){
     GPIO_InitTypeDef  gpio_init;
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
    
-#if defined(__BOARD_181213)   
-    //CS,SCK,SI==>out PC6,7,8
-    gpio_init.GPIO_Speed=GPIO_Speed_50MHz;
-    gpio_init.GPIO_Pin  = GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8;
-    gpio_init.GPIO_Mode = GPIO_Mode_Out_PP; 
-    GPIO_Init(GPIOC, &gpio_init);
-    //SO  PC9										
-    gpio_init.GPIO_Speed=GPIO_Speed_50MHz;
-    gpio_init.GPIO_Pin  = GPIO_Pin_9;
-    gpio_init.GPIO_Mode = GPIO_Mode_IN_FLOATING; 
-    GPIO_Init(GPIOC, &gpio_init);
-
-#elif defined(__BOARD_PIGEON_V7)
-    //CS,SCK,SI==>out
-    gpio_init.GPIO_Speed=GPIO_Speed_50MHz;
-    gpio_init.GPIO_Pin  = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2;
-    gpio_init.GPIO_Mode = GPIO_Mode_Out_PP; 
-    GPIO_Init(GPIOC, &gpio_init);
-    //SO										
-    gpio_init.GPIO_Speed=GPIO_Speed_50MHz;
-    gpio_init.GPIO_Pin  = GPIO_Pin_3;
-    gpio_init.GPIO_Mode = GPIO_Mode_IN_FLOATING; 
-    GPIO_Init(GPIOC, &gpio_init);
-
-#elif defined(__BOARD_DXQ_20181205)
 	//sck-pa4|si-pa5|cs-pa6|so-pa7
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
  
@@ -81,109 +56,38 @@ void hal_AT45DB_configPin(void){
     gpio_init.GPIO_Pin  = GPIO_Pin_7;
     gpio_init.GPIO_Mode = GPIO_Mode_IN_FLOATING; 
     GPIO_Init(GPIOA, &gpio_init);
-#endif 
 }
 
-#if defined(__BOARD_181213) 
+//sck-pa4|si-pa5|cs-pa6|so-pa7
+static void hal_spics_1(){
+    GPIOA_ODR_BIT(6)=1;
+    def_spics_delay();
+}
+static void hal_spics_0(){
+    GPIOA_ODR_BIT(6)=0;
+    def_spics_delay();
+}
+static void hal_spisck_1(){
+    GPIOA_ODR_BIT(4)=1;
+    def_spisck_delay();
+}
+static void hal_spisck_0(){
+    GPIOA_ODR_BIT(4)=0;
+    def_spisck_delay();
+}
+static void hal_spimosi_1(){
+    GPIOA_ODR_BIT(5)=1;
+}
+static void hal_spimosi_0(){
+    GPIOA_ODR_BIT(5)=0;
+}
+static  bool hal_spimiso_get(){
+    if(GPIOA->IDR & GPIO_Pin_7)
+        return true;
+    else
+        return false;
+}
 
-    static void hal_spics_1(){
-        GPIOC_ODR_BIT(6)=1;
-        def_spics_delay();
-    }
-    static void hal_spics_0(){
-        GPIOC_ODR_BIT(6)=0;
-        def_spics_delay();
-    }
-    static void hal_spisck_1(){
-        GPIOC_ODR_BIT(7)=1;
-        def_spisck_delay();
-    }
-    static void hal_spisck_0(){
-        GPIOC_ODR_BIT(7)=0;
-        def_spisck_delay();
-    }
-    static void hal_spimosi_1(){
-        GPIOC_ODR_BIT(8)=1;
-    }
-    static void hal_spimosi_0(){
-        GPIOC_ODR_BIT(8)=0;
-    }
-    static  bool hal_spimiso_get(){
-        if(GPIOC->IDR & GPIO_Pin_9)
-            return true;
-        else
-            return false;
-    }
-     
-#endif
- 
-    
-#if defined(__BOARD_PIGEON_V7)
-    
-    static void hal_spics_1(){
-        GPIOC_ODR_BIT(0)=1;
-        def_spics_delay();
-    }
-    static void hal_spics_0(){
-        GPIOC_ODR_BIT(0)=0;
-        def_spics_delay();
-    }
-    static void hal_spisck_1(){
-        GPIOC_ODR_BIT(1)=1;
-        def_spisck_delay();
-    }
-    static void hal_spisck_0(){
-        GPIOC_ODR_BIT(1)=0;
-        def_spisck_delay();
-    }
-    static void hal_spimosi_1(){
-        GPIOC_ODR_BIT(2)=1;
-    }
-    static void hal_spimosi_0(){
-        GPIOC_ODR_BIT(2)=0;
-    }
-    static  bool hal_spimiso_get(){
-        if(GPIOC->IDR & GPIO_Pin_3)
-            return true;
-        else
-            return false;
-    }
-
-#endif    
-    
-
-#if defined(__BOARD_DXQ_20181205) 
-	//sck-pa4|si-pa5|cs-pa6|so-pa7
-    static void hal_spics_1(){
-        GPIOA_ODR_BIT(6)=1;
-        def_spics_delay();
-    }
-    static void hal_spics_0(){
-        GPIOA_ODR_BIT(6)=0;
-        def_spics_delay();
-    }
-    static void hal_spisck_1(){
-        GPIOA_ODR_BIT(4)=1;
-        def_spisck_delay();
-    }
-    static void hal_spisck_0(){
-        GPIOA_ODR_BIT(4)=0;
-        def_spisck_delay();
-    }
-    static void hal_spimosi_1(){
-        GPIOA_ODR_BIT(5)=1;
-    }
-    static void hal_spimosi_0(){
-        GPIOA_ODR_BIT(5)=0;
-    }
-    static  bool hal_spimiso_get(){
-        if(GPIOA->IDR & GPIO_Pin_7)
-            return true;
-        else
-            return false;
-    }
-     
-#endif	
 
 static void hal_SPI_sendbyte(UInt8 bytVal){
 	UInt8 i;

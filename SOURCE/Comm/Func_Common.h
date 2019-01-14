@@ -122,7 +122,7 @@ void fns_SecrityFunc_setValidate(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 #define ERRCODE_LF_BUSY    (ERRTYPE_LF+0x01)     //lf正在发送数据
 
 
-#define PCCOM_RECV_TIMOUT 3000
+#define PCCOM_RECV_TIMOUT 200
 
 #define PCCOMM_STATE_NOACK 0X00
 #define PCCOMM_STATE_ACK 0XFF //立即回复

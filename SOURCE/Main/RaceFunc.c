@@ -2,10 +2,7 @@
 #include "halCPU.h"
 #include "SFile.h"
 #include "RaceFunc.h"
-//#include "gps.h"
-//#include "gprs.h"
 #include "RealTimer.h"
-#include "font.h"
 #include "Form.h"
 #include "RealTimer.h"
 

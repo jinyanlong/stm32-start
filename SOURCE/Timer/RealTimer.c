@@ -1,7 +1,5 @@
 #include "includes.h"
 #include "RealTimer.h"
-#include "MainFunc.h"
-
 
 FUNCTION_TICK s_hookTick=NULL;
 TimerHandle_t _tickHandler;
@@ -12,7 +10,6 @@ static volatile UInt32 _lastVerifyTick;
 
 //启用CPU内部RTC时钟,精度到1ms ,而DS1302/D3231仅作为一个时钟校准源
 void drv_Time_init(void){
-    DATETIME dt;
     Int64 clockTime=0;
     _time_base=0;
 
@@ -48,18 +45,18 @@ Int64 drv_Time_get(void){
     return _time_base+_nowTick;
 }
 
-static void drv_Time_load_(DATETIME* clockTime){
-    Int64 clock_now;
-    Int64 rtc_now;
-    
-    clock_now=parseTime(clockTime,0)+500; //转换时间增加500ms,平衡误差值
-    rtc_now=drv_Time_get();
-    
-    //出现秒级差异,执行修正
-    if( (clock_now>(rtc_now+999)) || (rtc_now>(999+clock_now)) ){
-        _time_base=clock_now-_nowTick;   
-    }
-}
+//static void drv_Time_load_(DATETIME* clockTime){
+//    Int64 clock_now;
+//    Int64 rtc_now;
+//    
+//    clock_now=parseTime(clockTime,0)+500; //转换时间增加500ms,平衡误差值
+//    rtc_now=drv_Time_get();
+//    
+//    //出现秒级差异,执行修正
+//    if( (clock_now>(rtc_now+999)) || (rtc_now>(999+clock_now)) ){
+//        _time_base=clock_now-_nowTick;   
+//    }
+//}
 
 
 void drv_Time_load(void){
@@ -126,14 +123,15 @@ Int64 fns_Time_get(void){
 
 //采用最高的任务优先级,所以一律不需要taskDISABLE_INTERRUPTS/taskENABLE_INTERRUPTS
 void drv_TimeTick_callback( TimerHandle_t xTimer ){//软件定时器tick
+    extern void drv_System_tick(UInt32 nowTick);
+    
     _nowTick=hal_RTC_getCount();//周期性刷新时间
     if(_nowTick > 0xFFFF0000){
         NVIC_SystemReset();  //连续运行40天才会执行到这里,仅用于防范系统BUG
     }
 
-    if(drv_System_tick){
-        drv_System_tick(_nowTick); 
-    }
+
+     drv_System_tick(_nowTick); 
 }
 
 

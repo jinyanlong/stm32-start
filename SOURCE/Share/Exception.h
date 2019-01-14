@@ -1,7 +1,7 @@
 #ifndef __EXCEPTION_H_001
 #define __EXCEPTION_H_001
 
-#include "MessageLoop.h"
+//#include "MessageLoop.h"
 #define ERROR_PARAM_OVER    0x0101
 
 #define ERROR_TIMER_INIT      0x1001

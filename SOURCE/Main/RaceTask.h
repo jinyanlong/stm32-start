@@ -61,7 +61,7 @@ void isr_RaceTask_notify(UInt32 event);
 
 void* drv_RaceMemory_alloc(UInt32 nSize);
 void drv_RaceMemory_free(void* p);
-void msg_RaceTask_post(MESSAGE* msg);
+
 
 
 #endif

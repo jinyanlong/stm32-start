@@ -1,7 +1,4 @@
 #include "includes.h"
-#include "stringRes.h"
-#include "font.h"
-#include "MessageLoop.h"
 #include "RealTimer.h"
 #include "Exception.h"
 #include "halCPU.h"
