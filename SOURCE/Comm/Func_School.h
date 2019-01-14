@@ -24,7 +24,7 @@ void drv_CommFunc_getRecord(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 void drv_CommFunc_lfSendDataNoAck(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 void drv_CommFunc_lfSendData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 void drv_CommFunc_nrfSendData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
-
+void drv_CommFunc_nrfTest(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 void drv_Comm_sendPing(UartPacketHandler* pUartHandler);
 void drv_Comm_sendRecord(UartPacketHandler* pUartHandler,UInt32 index);
 void drv_Comm_sendRecords(UartPacketHandler* pUartHandler);

@@ -45,12 +45,6 @@ void hal_NrfUart_config(void){
     hal_UART_open(_nrfCommUart.pUart,&lfDCB);
 }
 
-void hal_Nrf_config(void){
-    hal_NrfPin_config();
-    hal_NrfUart_config();
-    NRF_Power_On();
-}
-
 void hal_Nrf_powerOff(void){
     //断电
     NRF_Power_Off(); //注意高低电平上电
@@ -58,18 +52,24 @@ void hal_Nrf_powerOff(void){
     OS_LOCK();
     hal_UART_unconfig(LF_USART); //和2.4G通信串口 
     OS_UNLOCK();
-    
-    delay_ms(2000);
-
 }
 
-void hal_NRF_reset(void){
+
+void hal_Nrf_config(void){
+    hal_NrfPin_config();
+    hal_NrfUart_config();
     hal_Nrf_powerOff();
+}
+
+
+void drv_NRF_init(void){
+    hal_Nrf_powerOff();
+    delay_us(30000);
     //上电
     hal_UART_config(LF_USART);
     NRF_Power_On();
 
-    delay_ms(300);
+    delay_us(30000);
 }
 
 
@@ -79,13 +79,9 @@ void drv_NrfComm_parsePacket(UART_PACKET_PARSER* parser,UInt8* buffer,UInt16 len
     UInt8 crc8;
     parser->state=UART_PACKETSTATE_START;
     parser->eof=0;
-    parser->protocol=buffer[0];
-    if(parser->protocol!=0x81){
-        parser->state=UART_PACKETSTATE_ERROR;
-        return;
-    }
+
     parser->state=UART_PACKETSTATE_DATA;
-    for(i=1;i<len-1;i++){
+    for(i=0;i<len;i++){
         UInt8 val=buffer[i];
         
         if(UART_PACKETSTATE_ESC==parser->state){
@@ -103,24 +99,19 @@ void drv_NrfComm_parsePacket(UART_PACKET_PARSER* parser,UInt8* buffer,UInt16 len
         parser->eof++;
     }
  
-    if( (parser->state!=UART_PACKETSTATE_DATA) || (parser->eof<1) ){
+    if( (parser->state!=UART_PACKETSTATE_DATA) || (parser->eof<2) ){
         parser->state=UART_PACKETSTATE_ERROR;
         return;
     }
-        
-    crc8=crc8_byte_calc(CRC8_PRESET,&parser->protocol,1);
-    if(parser->eof>1){
-        crc8=crc8_byte_calc(crc8,parser->stream,parser->eof-1);
-    }
+   
+    crc8=crc8_byte_calc(CRC8_PRESET,parser->stream,parser->eof-1);
+    
     if(crc8!=parser->stream[parser->eof-1]){
-            parser->state=UART_PACKETSTATE_ERR_CRC;
-            return;
+        parser->state=UART_PACKETSTATE_ERR_CRC;
+        return;
     }
-    if(parser->eof==1){ //空包
-        parser->state=UART_PACKETSTATE_MASTER;
-    }else{
-        parser->state=UART_PACKETSTATE_OK;
-    }
+
+    parser->state=UART_PACKETSTATE_OK;
 }
 
 void drv_nrfComm_startRx(NrfUartPacketHandler* pUartHandler){
@@ -128,38 +119,61 @@ void drv_nrfComm_startRx(NrfUartPacketHandler* pUartHandler){
     hal_UART_startRx(pUartHandler->pUart);
 }
 
-void drv_NrfComm_onEvent_(void){ //解析数据
+#define NRFEVENT_RESULT_OK      0
+#define NRFEVENT_RESULT_IGNORE  1    
+#define NRFEVENT_RESULT_FAILED  2    
+
+UInt8 drv_NrfComm_onEvent_(void){ //解析数据
     UART_PACKET_PARSER parser;
     UInt8 tagCLA;
 
-    tagCLA=_pcCommUart.cmdPacket.INS==0x05?LF_NRFACK:NRF_TAG2MCU;
+    //串口帧解析
     memset(&_nrfCommUart.cmdPacket,0,sizeof(NRFFV_PACKET));
     parser.state=UART_PACKETSTATE_IDLE;    
     parser.stream=(UInt8*)&_nrfCommUart.cmdPacket;
     parser.eof=0;
+    drv_NrfComm_parsePacket(&parser,_nrfCommUart.stream+1,_nrfCommUart.eof-2);
+    if(parser.state!=UART_PACKETSTATE_OK) return NRFEVENT_RESULT_FAILED;
 
-    drv_NrfComm_parsePacket(&parser,_nrfCommUart.stream+1, _nrfCommUart.eof-1);
+    //数据内容检查
+    if(_pcCommUart.cmdPacket.INS==0x07){ //NRF 测试指令
+        if(_nrfCommUart.cmdPacket.PROT!=0x80) return NRFEVENT_RESULT_IGNORE;  //协议不匹配,忽略
+    }else{        
+        tagCLA= (_pcCommUart.cmdPacket.INS==0x05)?LF_NRFACK:NRF_TAG2MCU;
+        if( (_nrfCommUart.cmdPacket.PROT!=0x81)
+            || (_nrfCommUart.cmdPacket.CLA!=tagCLA) 
+            || (_nrfCommUart.cmdPacket.INS!=_pcCommUart.cmdPacket.PARAMS[1]) ) {
+            return NRFEVENT_RESULT_IGNORE;
+        }
+            
+        //执行一些附加的错误检查
+        if( (4+2+_nrfCommUart.cmdPacket.LEN+1)!=parser.eof ) {
+            return NRFEVENT_RESULT_FAILED;
+        }
 
-    if((parser.state!=UART_PACKETSTATE_OK)||(_nrfCommUart.cmdPacket.LEN<8)||(_nrfCommUart.cmdPacket.CLA!=tagCLA)){
-        return;
     }
-    if(_nrfCommUart.cmdPacket.INS==_pcCommUart.cmdPacket.PARAMS[1]){
-        memcpy(_pcCommUart.rspPacket.PARAMS,parser.stream+3,parser.eof-4);
-        _pcCommUart.rspPacket.LEN=parser.eof-4;
-    }
+    _pcCommUart.rspPacket.LEN=_nrfCommUart.cmdPacket.LEN+2;
+    memcpy(_pcCommUart.rspPacket.PARAMS,parser.stream+4,_pcCommUart.rspPacket.LEN);
 
-    if(_pcCommUart.rspPacket.CLA!=0){
-        UInt8 protocol=0x80; //无地址模式
-        drv_Comm_sendPacket(_pcCommUart.pUart,&protocol,&_pcCommUart.rspPacket);
-    }
+    return NRFEVENT_RESULT_OK;
 }
 void drv_NrfComm_onEvent(void){ //解析数据
+    UInt8 result;
     if(_pcCommUart.lazyMode){
-        drv_NrfComm_onEvent_();
+        result=drv_NrfComm_onEvent_();
+        if(result==NRFEVENT_RESULT_IGNORE){
+            return; //继续等待
+        }else if(result==NRFEVENT_RESULT_FAILED){
+            drv_CommFunc_setError(&_pcCommUart.rspPacket,ERRCODE_LF_BUSY);
+        }//else OK
         
-        drv_Comm_startRx(&_pcCommUart);
+        if(_pcCommUart.rspPacket.CLA!=0){
+            UInt8 protocol=0x80; //无地址模式
+            drv_Comm_sendPacket(_pcCommUart.pUart,&protocol,&_pcCommUart.rspPacket);
+        }
+        drv_Comm_startRx(&_pcCommUart); //重新开启PC-UART接收
     }
-    drv_nrfComm_startRx(&_nrfCommUart);
+    
 
 }
     

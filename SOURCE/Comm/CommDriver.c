@@ -19,7 +19,7 @@ void drv_Comm_sendByte(USART_TypeDef * pUart,UInt8 ch){
     }
 }
 
-void drv_Comm_sendBytes(USART_TypeDef * pUart,void* pDataBuff ,int nCount){
+void drv_Comm_sendBytes(USART_TypeDef * pUart,const void* pDataBuff ,int nCount){
     int i;
     UInt8* pByteBuff=(UInt8*)pDataBuff;
     for(i=0;i<nCount;i++){
@@ -93,8 +93,8 @@ void drv_Comm_parseSTBPacket(UART_PACKET_PARSER* parser,UInt8* buffer,UInt16 len
     UInt8 crc8;
     parser->state=UART_PACKETSTATE_START;
     parser->eof=0;
-    parser->protocol=buffer[0];
-    if(parser->protocol!=0x80){
+    parser->head[0]=buffer[0];
+    if(parser->head[0]!=0x80){
         parser->state=UART_PACKETSTATE_ERROR;
         return;
     }
@@ -122,7 +122,7 @@ void drv_Comm_parseSTBPacket(UART_PACKET_PARSER* parser,UInt8* buffer,UInt16 len
         return;
     }
         
-    crc8=crc8_byte_calc(CRC8_PRESET,&parser->protocol,1);
+    crc8=crc8_byte_calc(CRC8_PRESET,parser->head,1);
     if(parser->eof>1){
         crc8=crc8_byte_calc(crc8,parser->stream,parser->eof-1);
     }

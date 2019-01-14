@@ -28,6 +28,8 @@ void appInit(void){
     drv_Keyboard_init(hook_Keyboard_onPress);
     fns_Keyboard_enable();
     drv_LF_init();
+    
+    drv_NRF_init();
 }
 
 void appConfig(void){

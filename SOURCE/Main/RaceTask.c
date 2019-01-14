@@ -190,7 +190,11 @@ void drv_RaceTask_doEvents(UInt32 eventMask){
 
         if(event&EVENT_RX_PCCOMM){            
             drv_PcComm_onEvent();
-            // drv_nrfComm_startRx(&_nrfCommUart);
+            if(!_pcCommUart.lazyMode){
+                drv_Comm_startRx(&_pcCommUart);
+            }else{
+                //延迟处理,暂缓开启接收
+            }
             #ifdef __GUI             
                 event_GuiTask_raise(EVENT_GUI_COMM);//通知界面程序
             #endif            
@@ -198,7 +202,7 @@ void drv_RaceTask_doEvents(UInt32 eventMask){
         
         if(event&EVENT_RX_NRFCOMM){            
             drv_NrfComm_onEvent();
-            // drv_Comm_startRx(&_pcCommUart);
+            drv_nrfComm_startRx(&_nrfCommUart);
             #ifdef __GUI             
                 event_GuiTask_raise(EVENT_GUI_COMM);//通知界面程序
             #endif            

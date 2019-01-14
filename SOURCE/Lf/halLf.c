@@ -157,7 +157,7 @@ void LFTIM3_IRQHandler(void) //4us timetick  //@@1 192us
             if((_lfSendTick%2)==0){
                 lfSendBit(m_MC_buf[_lfSendTick/2]);
             }
-            if(_lfSendTick==178){
+            if(_lfSendTick==179){
                 _lfSendState=LF_SEND_END;
             }
             _lfSendTick++;

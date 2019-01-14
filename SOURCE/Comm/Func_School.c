@@ -239,6 +239,7 @@ void drv_CommFunc_lfSendDataNoAck(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
     }
 }
 extern UartPacketHandler _pcCommUart;
+//低频指令转发
 void drv_CommFunc_lfSendData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
     UInt16 cmdData;
     if(fvCmd->LEN<2){
@@ -252,11 +253,11 @@ void drv_CommFunc_lfSendData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
         return;
     }
 
-    _pcCommUart.rspTimout=drv_Time_getTick()+PCCOM_RECV_TIMOUT;
+    _pcCommUart.rspTimout=drv_Time_getTick()+500;
     _pcCommUart.lazyMode=true;
 
 }
-
+//2.4G指令转发
 void drv_CommFunc_nrfSendData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
     if(fvCmd->LEN<22){
         drv_CommFunc_setError(fvRsp,ERRCODE_PACKET_LEN);
@@ -265,10 +266,18 @@ void drv_CommFunc_nrfSendData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
     _pcCommUart.rspINS=(fvCmd->PARAMS[3]);
     drv_Nrf_sendData(fvCmd->PARAMS,fvCmd->LEN);
 
-    _pcCommUart.rspTimout=drv_Time_getTick()+PCCOM_RECV_TIMOUT;
+    _pcCommUart.rspTimout=drv_Time_getTick()+500;
     _pcCommUart.lazyMode=true;
 }
 
+
+void drv_CommFunc_nrfTest(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
+    drv_Nrf_sendTest();
+
+    _pcCommUart.rspTimout=drv_Time_getTick()+100;
+    _pcCommUart.lazyMode=true;    
+
+}
 
 void drv_CommFunc_ackRecord(FV_COMMAND* cmdPacket){
     UInt32 sysMark;

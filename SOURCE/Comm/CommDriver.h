@@ -57,11 +57,12 @@ typedef FV_PACKET FV_RESPONSE;
 typedef struct _UART_PACKET_STATE{
     UInt8   state;
     UInt8   eof;
-    UInt8   protocol;         //协议模式
+    UInt8   last;           //最后一次收到的数据
+    UInt8   crc8;           //CRC8计算缓冲
+    
+    UInt8   head[4];         //协议模式
     UInt8*  stream;
     
-    UInt8   last;     //最后一次收到的数据
-    UInt8   crc8;      //CRC8计算缓冲
 } UART_PACKET_PARSER;
 
 typedef struct _UartPacketHandler{
@@ -91,13 +92,16 @@ typedef struct _UartPacketHandler{
 
 
 typedef struct _NRFFV_PACKET{
+    UInt8  PROT;
     UInt8  RETAIN;
     UInt8  TOGGLE;
     UInt8  RSSI;
+    
     UInt8  LEN;                         
     UInt8  CHANEL;   
     UInt8  CLA;                         
-    UInt8  INS;  
+    UInt8  INS;
+    
 	UInt8  PARAMS[UART_BUFFER_MAXSIZE-2];       //输入数据
 } NRFFV_PACKET;
 
@@ -108,7 +112,7 @@ typedef struct _NrfUartPacketHandler{
     UInt16  eof;     //缓冲区下一个空位
         
     NRFFV_PACKET cmdPacket;   //接口nrf模块数据
-    NRFFV_PACKET rspPacket;  
+    //NRFFV_PACKET rspPacket;  
 
 }NrfUartPacketHandler;
 
@@ -132,6 +136,6 @@ void drv_Comm_sendPacket(USART_TypeDef * pUart,UInt8* head,FV_PACKET* pFVPacket)
 void drv_Comm_parseSTBPacket(UART_PACKET_PARSER* parser,UInt8* buffer,UInt16 len);
 void drv_Comm_parseETBPacket(UART_PACKET_PARSER* parser,UInt8* buffer,UInt16 len);
 void drv_Comm_sendByte(USART_TypeDef * pUart,UInt8 ch);
-void drv_Comm_sendBytes(USART_TypeDef * pUart,void* pDataBuff ,int nCount);
+void drv_Comm_sendBytes(USART_TypeDef * pUart,const void* pDataBuff ,int nCount);
 
 #endif

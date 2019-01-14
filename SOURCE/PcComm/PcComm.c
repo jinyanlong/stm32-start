@@ -58,7 +58,6 @@ void drv_PcComm_onEvent(void){//数据解析
     }else{
         //错误指令,忽略    
     }
-    drv_Comm_startRx(&_pcCommUart);
 }
 
 

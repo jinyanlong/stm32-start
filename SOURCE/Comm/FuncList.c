@@ -40,7 +40,8 @@ void (*drv_CommFunc_Command[])(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp)={
     drv_CommFunc_getRecord,
     drv_CommFunc_lfSendDataNoAck,
     drv_CommFunc_lfSendData,
-    drv_CommFunc_nrfSendData
+    drv_CommFunc_nrfSendData,
+    drv_CommFunc_nrfTest, //测试RF模块工作是否正常
 };
 
 void drv_CommFunc_ackRecord(FV_COMMAND* cmdPacket);
