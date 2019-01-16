@@ -69,7 +69,8 @@ static __INLINE void LF_SETBIT(uint8_t bit){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-volatile uint32_t* m_phase_buffer;
+static volatile uint8_t _buffer[32];
+ uint32_t volatile* m_phase_buffer;
 volatile uint32_t m_phase_sof; 
 volatile uint32_t m_phase_eof; 
 
@@ -112,6 +113,7 @@ static __INLINE void drv_MCBuff_pushUInt16(uint16_t uVal){
 
 void drv_MCBuff_reset(void){
     m_phase_sof=m_phase_eof=0;
+    memset((void*)_buffer,0,sizeof(_buffer));
 }
 
 void drv_MCBuff_create(uint16_t coinId){
@@ -127,11 +129,15 @@ void drv_MCBuff_create(uint16_t coinId){
     drv_MCBuff_pushBit(1);
     drv_MCBuff_pushBit(1);
     drv_MCBuff_pushBit(1);
-    drv_MCBuff_pushPhrase(PHRASE_OFF,2);
+    drv_MCBuff_pushPhrase(PHRASE_ON,2);
     
     //patten(1B,=0x78) (16+2 phase)
     drv_MCBuff_pushByte(0x78);
-    drv_MCBuff_pushPhrase(PHRASE_OFF,2);
+    if(coinId&0x80){
+        drv_MCBuff_pushPhrase(PHRASE_OFF,2);
+    }else{
+        drv_MCBuff_pushPhrase(PHRASE_ON,2);
+    }
     
     //ÄÚÈÝ(4B)  (64+2 phase)
     drv_MCBuff_pushUInt16(coinId);
@@ -141,7 +147,7 @@ void drv_MCBuff_create(uint16_t coinId){
 }
 
 void drv_LF_init(void){
-    static volatile uint8_t _buffer[32];
+
     m_phase_buffer=PTR_BITADDR(_buffer,0);
     drv_MCBuff_reset();
     hal_LF_initTimer();
