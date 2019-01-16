@@ -6,7 +6,7 @@
 #include "RealTimer.h"
 #include "RaceTask.h"
 #include "RaceData.h"
-#include "lf.h"
+#include "halLF.h"
 #include "halNrf.h"
 #include "Func_Common.h"
 #include "Nrf.h"
@@ -234,9 +234,7 @@ void drv_CommFunc_lfSendDataNoAck(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
         return;
     }
     memcpy(&sendData,fvCmd->PARAMS,2);
-    if(!(lfSendData(sendData))){
-        drv_CommFunc_setError(fvRsp,ERRCODE_LF_BUSY);
-    }
+    drv_LF_send(sendData);
 }
 extern UartPacketHandler _pcCommUart;
 //µÍÆµÖ¸Áî×ª·¢
@@ -248,10 +246,7 @@ void drv_CommFunc_lfSendData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
     }
     memcpy(&cmdData,fvCmd->PARAMS,2);
     _pcCommUart.rspINS=(cmdData>>8);
-    if(!(lfSendData(cmdData))){
-        drv_CommFunc_setError(fvRsp,ERRCODE_LF_BUSY);
-        return;
-    }
+    drv_LF_send(cmdData);
 
     _pcCommUart.rspTimout=drv_Time_getTick()+500;
     _pcCommUart.lazyMode=true;

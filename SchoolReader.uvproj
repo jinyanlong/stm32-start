@@ -821,14 +821,54 @@
               <FilePath>.\SOURCE\Share\md5.c</FilePath>
             </File>
             <File>
+              <FileName>SFLib.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Share\SFLib.C</FilePath>
+            </File>
+            <File>
+              <FileName>ByteStream.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\SOURCE\Share\ByteStream.h</FilePath>
+            </File>
+            <File>
+              <FileName>DesBox.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\SOURCE\Share\DesBox.h</FilePath>
+            </File>
+            <File>
+              <FileName>DesCrypt.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\SOURCE\Share\DesCrypt.h</FilePath>
+            </File>
+            <File>
+              <FileName>Exception.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\SOURCE\Share\Exception.h</FilePath>
+            </File>
+            <File>
+              <FileName>md5.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\SOURCE\Share\md5.h</FilePath>
+            </File>
+            <File>
+              <FileName>SFLib.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\SOURCE\Share\SFLib.h</FilePath>
+            </File>
+            <File>
+              <FileName>SFTypes.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\SOURCE\Share\SFTypes.h</FilePath>
+            </File>
+            <File>
               <FileName>mem_alloc.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\SOURCE\Share\mem_alloc.c</FilePath>
             </File>
             <File>
-              <FileName>SFLib.C</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\SOURCE\Share\SFLib.C</FilePath>
+              <FileName>mem_alloc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\SOURCE\Share\mem_alloc.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1029,11 +1069,6 @@
               <FileName>halLf.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\SOURCE\Lf\halLf.h</FilePath>
-            </File>
-            <File>
-              <FileName>lf.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\SOURCE\Lf\lf.c</FilePath>
             </File>
           </Files>
         </Group>
