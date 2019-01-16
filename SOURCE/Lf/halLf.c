@@ -135,8 +135,7 @@ void drv_MCBuff_create(uint16_t coinId){
     
     //ÄÚÈÝ(4B)  (64+2 phase)
     drv_MCBuff_pushUInt16(coinId);
-    drv_MCBuff_pushUInt16(coinId);
-    //drv_MCBuff_pushUInt16(crc16_ccitt_l(0xF5A3,&coinId,2));
+    drv_MCBuff_pushUInt16(crc16_ccitt_l(0xF5A3,&coinId,2));
     drv_MCBuff_pushPhrase(PHRASE_OFF,1);
 
 }
