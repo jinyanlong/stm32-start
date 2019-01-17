@@ -125,7 +125,6 @@ void drv_nrfComm_startRx(NrfUartPacketHandler* pUartHandler){
 
 UInt8 drv_NrfComm_onEvent_(void){ //解析数据
     UART_PACKET_PARSER parser;
-    UInt8 tagCLA;
 
     //串口帧解析
     memset(&_nrfCommUart.cmdPacket,0,sizeof(NRFFV_PACKET));
@@ -138,19 +137,25 @@ UInt8 drv_NrfComm_onEvent_(void){ //解析数据
     //数据内容检查
     if(_pcCommUart.cmdPacket.INS==0x07){ //NRF 测试指令
         if(_nrfCommUart.cmdPacket.PROT!=0x80) return NRFEVENT_RESULT_IGNORE;  //协议不匹配,忽略
-    }else{        
-        tagCLA= (_pcCommUart.cmdPacket.INS==0x05)?LF_NRFACK:NRF_TAG2MCU;
+    }else if(_pcCommUart.cmdPacket.INS==0x05){  //低频应答
         if( (_nrfCommUart.cmdPacket.PROT!=0x81)
-            || (_nrfCommUart.cmdPacket.CLA!=tagCLA) 
+            || (_nrfCommUart.cmdPacket.CLA!=LF_NRFACK) 
             || (_nrfCommUart.cmdPacket.INS!=_pcCommUart.cmdPacket.PARAMS[1]) ) {
             return NRFEVENT_RESULT_IGNORE;
         }
-            
-        //执行一些附加的错误检查
-        if( (4+2+_nrfCommUart.cmdPacket.LEN+1)!=parser.eof ) {
-            return NRFEVENT_RESULT_FAILED;
+    }else if(_pcCommUart.cmdPacket.INS==0x06){       //高频应答 
+        if( (_nrfCommUart.cmdPacket.PROT!=0x81)
+            || (_nrfCommUart.cmdPacket.CLA!=NRF_TAG2MCU) 
+            || (_nrfCommUart.cmdPacket.INS!=_pcCommUart.cmdPacket.PARAMS[3]) ) {
+            return NRFEVENT_RESULT_IGNORE;
         }
-
+    }else{
+        return NRFEVENT_RESULT_IGNORE;
+    }
+    
+    //执行一些附加的错误检查
+    if( (4+2+_nrfCommUart.cmdPacket.LEN+1)!=parser.eof ) {
+        return NRFEVENT_RESULT_FAILED;
     }
     _pcCommUart.rspPacket.LEN=_nrfCommUart.cmdPacket.LEN+2;
     memcpy(_pcCommUart.rspPacket.PARAMS,parser.stream+4,_pcCommUart.rspPacket.LEN);

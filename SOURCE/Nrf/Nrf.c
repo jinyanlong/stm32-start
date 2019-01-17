@@ -13,7 +13,7 @@
 extern NrfUartPacketHandler _nrfCommUart;
 
 UInt8 drv_Nrf_sendProfix(UInt8 crc8){
-    const UInt8 prefix[]={NRFCOMM_PROTOCOL,0X00,0X01,0X00};
+    const UInt8 prefix[]={NRFCOMM_PROTOCOL,0x00,0x01,0x00};
     drv_Comm_sendBytes(_nrfCommUart.pUart,prefix,4);
         
     return crc8_byte_calc(crc8,prefix,4);
