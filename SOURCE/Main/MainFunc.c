@@ -9,6 +9,9 @@
 #include "Lcd.h"
 #include "Beep.h"
 
+extern volatile UInt32 s_race_activeTick;
+
+
 void hook_Keyboard_onPress(UInt32 keyVal,UInt32 keyState){
     drv_Led_start(LED_2,1,500,0);
 }
@@ -50,7 +53,7 @@ void drv_CPU_reset(int reason){
     sprintf(strBuff,"System reset(%d) ...",reason);
     drv_Form_init();
     drv_Form_showTip(strBuff);    
-    delay_us(1000000);
+    delay_us(2000000);
 
     hal_CPU_reset();
 }
