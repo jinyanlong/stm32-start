@@ -17,6 +17,7 @@
 #include "PcComm.h"
 #include "Nrf.h"
 #include "halNrf.h"
+#include "Led.h"
 
 #ifdef __NET
     //为节省内存,HTTP的收发缓冲区都是s_http
@@ -104,6 +105,7 @@ bool drv_RaceTask_isReady(void){
 
 
 void drv_RaceTask_doTick(UInt32 nowTick){
+    static UInt32 mLedTick;
     if(_pcCommUart.lazyMode){
         if(nowTick>_pcCommUart.rspTimout){
             UInt8 protocol=0x80; //无地址模式
@@ -111,6 +113,11 @@ void drv_RaceTask_doTick(UInt32 nowTick){
             drv_Comm_sendPacket(_pcCommUart.pUart,&protocol,&_pcCommUart.rspPacket);
             drv_Comm_startRx(&_pcCommUart);
         }
+    }
+
+    if(nowTick>mLedTick){
+        drv_Led_start(LED_1,1,500,0);
+        mLedTick=nowTick+2000;
     }
 }
 

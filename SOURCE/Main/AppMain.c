@@ -13,6 +13,7 @@
 #include "CommDriver.h"
 #include "PcComm.h"
 #include "Form.h"
+#include "Beep.h"
 
 extern bool _IsAppStarted;
 
@@ -21,6 +22,7 @@ void appTaskStart(void){
     drv_RaceTask_init();
     // drv_GuiTask_init(app_GUI_onBeforeMsg,app_GUI_onAfterMsg);
     drv_TimeTick_init();
+    
 }
 
 void appInit(void){  
@@ -28,6 +30,7 @@ void appInit(void){
     drv_Form_init();
     drv_Time_init();
     drv_Lcd_init();
+    drv_Beep_init();
     drv_Keyboard_init(hook_Keyboard_onPress);
     fns_Keyboard_enable();
     drv_LF_init();
@@ -39,6 +42,7 @@ void appConfig(void){
     hal_Lcd_config();
     hal_RTC_config();   
     hal_Led_config();
+    hal_Beep_config();      
     hal_Keyboard_config();
     hal_LF_config();
     hal_PcComm_config();
@@ -54,6 +58,7 @@ void preAppStartInit(void){
 
 void afterAppStartInit(void){
     _IsAppStarted=true;
+    fns_Beep_ok(1);
 }
 
 int main(void){

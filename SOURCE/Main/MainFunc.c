@@ -7,8 +7,7 @@
 #include "Form.h"
 #include "MessageLoop.h"
 #include "Lcd.h"
-
-UInt32 mLedTick;
+#include "Beep.h"
 
 void hook_Keyboard_onPress(UInt32 keyVal,UInt32 keyState){
     drv_Led_start(LED_2,1,500,0);
@@ -23,31 +22,35 @@ void drv_System_tick(UInt32 nowTick){ //软件定时器tick
         drv_CPU_reset(0);
     }  
     
+    drv_Keyboard_tick(nowTick);
     drv_Led_tick(nowTick);
-    if(nowTick>mLedTick){
-        drv_Led_start(LED_1,1,500,0);
-        mLedTick=nowTick+2000;
+    drv_Beep_tick(nowTick);
+
+    if( drv_Exception_get()){
+        //异常
+        return;
     }
 
-    drv_Keyboard_tick(nowTick);   
+    if(drv_RaceTask_isReady()){
+#ifndef __DEBUG
+        //检查每一个TASK最后的刷新时刻
+        if( nowTick > (s_race_activeTick+TASK_RACE_OVERTIME) ){
+            drv_CPU_reset(-1);
+        }
+#endif
 
     flag=fns_Event_test(EVENT_RX_NRFCOMM|EVENT_RX_PCCOMM);
     event_RaceTask_raise(flag|EVENT_RACE_TICK);
 
-    // if(nowTick>lftick){
-    //     lftick=nowTick+50;
-    //     lfSendStart(1);
-    // }
+    }
 }
 
 void drv_CPU_reset(int reason){
-#ifdef __GUI 
     char strBuff[64];    
     sprintf(strBuff,"System reset(%d) ...",reason);
     drv_Form_init();
     drv_Form_showTip(strBuff);    
     delay_us(1000000);
-#endif
 
     hal_CPU_reset();
 }

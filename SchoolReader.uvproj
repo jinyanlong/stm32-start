@@ -357,7 +357,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER, STM32F10X_HD,__LF_CRC16,__DEBUG</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\Libraries\CMSIS\Core\CM3;..\Libraries\CMSIS\Device\ST\STM32F10x\Include;..\FreeRTOS9\Source\include;..\FreeRTOS9\Source\portable\RVDS\ARM_CM3;.\Source;.\Source\CommFunc;.\Source\Config;.\Source\Form;.\Source\HAL_Driver;.\Source\HAL_PORT;.\Source\LFTAG;.\Source\SAM;.\Source\Share;.\Source\USB;.\SOURCE\CANReader;.\SOURCE\Draw;.\SOURCE\FILESYS;.\SOURCE\GPRS;.\SOURCE\GPS;.\SOURCE\Keyboard;.\SOURCE\Timer;.\SOURCE\Main;.\SOURCE\Led;.\SOURCE\Nrf;.\SOURCE\Lf;.\SOURCE\GUI;.\SOURCE\Flash;.\SOURCE\Comm;.\SOURCE\PcComm</IncludePath>
+              <IncludePath>..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\Libraries\CMSIS\Core\CM3;..\Libraries\CMSIS\Device\ST\STM32F10x\Include;..\FreeRTOS9\Source\include;..\FreeRTOS9\Source\portable\RVDS\ARM_CM3;.\Source;.\Source\CommFunc;.\Source\Config;.\Source\Form;.\Source\HAL_Driver;.\Source\HAL_PORT;.\Source\LFTAG;.\Source\SAM;.\Source\Share;.\Source\USB;.\SOURCE\CANReader;.\SOURCE\Draw;.\SOURCE\FILESYS;.\SOURCE\GPRS;.\SOURCE\GPS;.\SOURCE\Keyboard;.\SOURCE\Timer;.\SOURCE\Main;.\SOURCE\Led;.\SOURCE\Nrf;.\SOURCE\Lf;.\SOURCE\GUI;.\SOURCE\Flash;.\SOURCE\Comm;.\SOURCE\PcComm;.\SOURCE\Beep</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1224,6 +1224,21 @@
               <FileName>SFile.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\SOURCE\FILESYS\SFile.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Src-Beep</GroupName>
+          <Files>
+            <File>
+              <FileName>Beep.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Beep\Beep.c</FilePath>
+            </File>
+            <File>
+              <FileName>halBeep.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Beep\halBeep.c</FilePath>
             </File>
           </Files>
         </Group>
