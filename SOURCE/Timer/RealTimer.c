@@ -120,18 +120,15 @@ Int64 fns_Time_get(void){
 
 
 
-
+extern void drv_System_tick(UInt32 nowTick);
 //采用最高的任务优先级,所以一律不需要taskDISABLE_INTERRUPTS/taskENABLE_INTERRUPTS
 void drv_TimeTick_callback( TimerHandle_t xTimer ){//软件定时器tick
-    extern void drv_System_tick(UInt32 nowTick);
-    
     _nowTick=hal_RTC_getCount();//周期性刷新时间
     if(_nowTick > 0xFFFF0000){
         NVIC_SystemReset();  //连续运行40天才会执行到这里,仅用于防范系统BUG
     }
 
-
-     drv_System_tick(_nowTick); 
+    drv_System_tick(_nowTick);
 }
 
 

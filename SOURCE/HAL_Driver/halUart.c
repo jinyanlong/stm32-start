@@ -90,7 +90,7 @@ void hal_UART_unconfig(USART_TypeDef * pUart){
         GPIOC_ODR_BIT(10)=GPIOA_ODR_BIT(11)=0;
 		gpio_init.GPIO_Pin  = GPIO_Pin_10|  GPIO_Pin_11;
 	    gpio_init.GPIO_Mode = GPIO_Mode_Out_OD;
-	    GPIO_Init(GPIOC, &gpio_init);
+	    GPIO_Init(GPIOB, &gpio_init);
 	}
 }
 //功能：初始化串口

@@ -125,9 +125,11 @@ void drv_RaceTask_onTick(void){
 #endif    
 
     if( drv_Exception_get()!=NULL) return; 
- 
+
     drv_RaceTask_doTick(nowTick);
 }
+
+
 
 void drv_RaceTask_load(void){
     memset((void*)&s_monitor,0,sizeof(s_monitor));
@@ -184,7 +186,6 @@ void drv_RaceTask_doEvents(UInt32 eventMask){
     drv_nrfComm_startRx(&_nrfCommUart);  
     drv_Comm_startRx(&_pcCommUart);  
 
-    
     while(1){
         event= xEventGroupWaitBits(m_raceEvents,EVENT_TASK_ALL,pdTRUE,pdFALSE,portMAX_DELAY);
 

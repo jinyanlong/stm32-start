@@ -7,34 +7,36 @@
 #include "Led.h"
 #include "halNrf.h"
 #include "halLf.h"
-#include "halLcd.h"
 #include "Lcd.h"
 #include "halAT45DB.h"
 #include "RaceTask.h"
 #include "CommDriver.h"
 #include "PcComm.h"
+#include "Form.h"
 
-
+extern bool _IsAppStarted;
 
 void appTaskStart(void){
+    app_GUI_showSplash();
     drv_RaceTask_init();
+    // drv_GuiTask_init(app_GUI_onBeforeMsg,app_GUI_onAfterMsg);
     drv_TimeTick_init();
 }
 
 void appInit(void){  
     drv_CPU_init(); 
+    drv_Form_init();
     drv_Time_init();
-    // drv_Lcd_init();
+    drv_Lcd_init();
     drv_Keyboard_init(hook_Keyboard_onPress);
     fns_Keyboard_enable();
     drv_LF_init();
-    
     drv_NRF_init();
 }
 
 void appConfig(void){
 	hal_CPU_config();  
-    // hal_Lcd_config();
+    hal_Lcd_config();
     hal_RTC_config();   
     hal_Led_config();
     hal_Keyboard_config();
@@ -45,10 +47,21 @@ void appConfig(void){
     
 }
 
+void preAppStartInit(void){
+    _IsAppStarted=false;
+    drv_Exception_init(app_Exception_onRaise);
+}
+
+void afterAppStartInit(void){
+    _IsAppStarted=true;
+}
+
 int main(void){
+    preAppStartInit();
     appConfig(); 
     appInit();
     appTaskStart();
+    afterAppStartInit();
     vTaskStartScheduler();
     while(1);
 }

@@ -21,7 +21,8 @@
 			"racefunc.h": "c",
 			"func_common.h": "c",
 			"halnrf.h": "c",
-			"nrf.h": "c"
+			"nrf.h": "c",
+			"lcd.h": "c"
 		},
 		"files.exclude": {
 			"**/LFActiverSchool": true

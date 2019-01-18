@@ -2,7 +2,6 @@
 #define __REALTIMER_001
 
 #include "SFTypes.h"
-#include "halDS3231.h"
 
 #include "halRTC.h"
 

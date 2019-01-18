@@ -52,4 +52,6 @@ bool drv_GUITask_isCurrent(void);
 void drv_GuiTask_run(void* pvParameters);
 int drv_System_run(void);
 bool drv_System_isRunning(void);
+
+void drv_GuiTask_init(FUNCTION_MSG app_GUI_onBeforeMsg,FUNCTION_MSG app_GUI_onAfterMsg);
 #endif

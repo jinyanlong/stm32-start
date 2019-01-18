@@ -6,10 +6,10 @@
 #include "CommDriver.h"
 #include "RaceTask.h"
 #include "MainFunc.h"
+#include "MessageLoop.h"
 
 #define ERROR_RESET_INTERVAL 600000
 
-void fns_Exception_doShow(void);
 
 extern void fns_Comm_onMsg(MESSAGE* pMsg);
 extern void fns_Form_onMsg(MESSAGE* pMsg);
@@ -19,9 +19,11 @@ extern void fns_Form_onMsg(MESSAGE* pMsg);
 //};
 static Exception m_first_exception;
 
+static HOOK_EXCEPTION m_exception_hook=NULL;
 
-void drv_Exception_init(void){
+void drv_Exception_init(HOOK_EXCEPTION hook){
     memset(&m_first_exception,0,sizeof(Exception));
+    m_exception_hook=hook;
 }
 
 
@@ -41,32 +43,9 @@ void drv_Exception_throwEx(UInt16 errType,UInt16 errCode, const char* desc){
     if(desc){
         strcpy(m_first_exception.desc,desc);
     }
-    if(!drv_System_isRunning()) return;
+    if(m_exception_hook) m_exception_hook(&m_first_exception);
+    while(1);
     
-    //抛出异常的位置,分为3种:在GUITask中，在RaceTask, 在其它Task中
-    //1. 如果在GUITask中,这个函数不退出，就不能绘制界面,所以必须在这里直接绘制
-    //2. 如果在RaceTask中,这个函数不退出，就不能通讯,所以必须在这里执行通讯操作
-    //3. 如果在其它task中,只要向RaceTask 抛送异常事件即可
-    
-    if( drv_RaceTask_isCurrent() ){
-#ifdef __GUI 
-        event_GuiTask_raise(EVENT_GUI_EXCEPTION);
-#endif 
-        drv_RaceTask_doEvents(EVENT_TASK_ALL);
-    }else{
-        
- #ifdef __GUI        
-        if( drv_GUITask_isCurrent() ){
-            fns_Exception_doShow();
-        }else{
-            event_GuiTask_raise(EVENT_GUI_EXCEPTION);
-        }
-#endif        
-        //死循环,直到断电退出
-        while(1){
-            delay_ms(100);
-        }
-    }
 }
 
 void drv_Exception_throw(UInt16 errType){
@@ -177,33 +156,5 @@ UInt16 fns_ExceptionForm_getId(UInt16 errType){
 }
 
 
-void fns_Exception_doShow(void){
-    
-#ifdef __GUI    
-    char strText[64];
-    Exception* exception=drv_Exception_get();
-    if(exception==NULL) return;
-    
-    fns_Form_clearLine(0);
-	fns_Form_clearLine(1);
-	fns_Form_clearLine(2);
-	fns_Form_clearLine(3);
-	fns_Form_clearLine(4);
-        
-    sprintf(strText,"ERROR: %04X-%04X",exception->errType,exception->errCode);
-    fns_CDC_drawString(&_formCDC,(LCD_X_MAX-strlen(strText)*FONT_CHAR_WIDTH)/2,2*FONT_CHAR_HEIGHT,strText);
-    fns_Form_showUStringIdCenter(1,fns_ExceptionForm_getId(exception->errType));
-    
-    //显示更详细的错误信息
-    if(strlen(exception->desc)*FONT_CHAR_WIDTH >=LCD_X_MAX ){
-        fns_CDC_drawString(&_formCDC,0,3*FONT_CHAR_HEIGHT,exception->desc);
-    }else{
-        fns_CDC_drawString(&_formCDC,(LCD_X_MAX-strlen(exception->desc)*FONT_CHAR_WIDTH)/2,3*FONT_CHAR_HEIGHT,exception->desc);
-    }
-    drv_LCD_flush();
-    drv_LCD_invalidate();
-#endif    
-
-}
     
 

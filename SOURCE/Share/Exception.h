@@ -35,13 +35,13 @@ typedef struct _ExceptionStruct{
     char desc[EXCEPTION_DESC_SIZE];
 }Exception;
 
+typedef void (*HOOK_EXCEPTION)(Exception*);
 
-void drv_Exception_init(void);
-
+void drv_Exception_init(HOOK_EXCEPTION hook);
 void fns_ExceptionForm_create(void);
 
 Exception* drv_Exception_get(void);
 void drv_Exception_throw(UInt16 errType);
 void drv_Exception_throwEx(UInt16 errType,UInt16 errCode, const char* desc);
-
+void fns_ExceptionForm_showTip(Exception* exception);
 #endif

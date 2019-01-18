@@ -966,16 +966,6 @@
               <FilePath>.\SOURCE\Timer\RealTimer.h</FilePath>
             </File>
             <File>
-              <FileName>halDS1302.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\SOURCE\Timer\halDS1302.h</FilePath>
-            </File>
-            <File>
-              <FileName>halDS1302.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\SOURCE\Timer\halDS1302.c</FilePath>
-            </File>
-            <File>
               <FileName>halRTC.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\SOURCE\Timer\halRTC.c</FilePath>
@@ -984,16 +974,6 @@
               <FileName>halRTC.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\SOURCE\Timer\halRTC.h</FilePath>
-            </File>
-            <File>
-              <FileName>halDS3231.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\SOURCE\Timer\halDS3231.c</FilePath>
-            </File>
-            <File>
-              <FileName>halDS3231.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\SOURCE\Timer\halDS3231.h</FilePath>
             </File>
           </Files>
         </Group>

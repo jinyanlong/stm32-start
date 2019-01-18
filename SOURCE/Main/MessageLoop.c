@@ -4,6 +4,9 @@
 #include "halCPU.h"
 #include "RealTimer.h"
 #include "halLED.h"
+#include "Form.h"
+
+bool _IsAppStarted=false;
 
 FUNCTION_VOID s_hookOnInit=NULL;       //在所有任务建立之后，主任务之中执行
 FUNCTION_VOID s_hookGuiOnLoad=NULL;       //在所有任务建立之后，主任务之中执行
@@ -102,9 +105,6 @@ void drv_GuiTask_register(string taskName,FUNCTION_EVENTS onEvents, CALLBACK_MSG
 
 
 
-
-
-
 void msg_GuiTask_post(MESSAGE* msg){
     xQueueSend(s_mainQueue,msg,0);
     event_GuiTask_raise(EVENT_GUI_MSG);
@@ -134,7 +134,7 @@ bool drv_GUITask_isCurrent(void){
     return (&m_guiTask_pcb)==xTaskGetCurrentTaskHandle();
 }
 bool drv_System_isRunning(void){
-    return s_hookOnInit==NULL;
+    return _IsAppStarted;
 }
 int drv_System_run(void){
     static StaticQueue_t _queue_pcb;
@@ -152,4 +152,33 @@ int drv_System_run(void){
     vTaskStartScheduler();
 
     while(1);//调度器工作不正常时,利用WATCHDOG复位
+}
+
+void hook_GUI_onEvents(UInt32 events){
+    static UInt32 lastTick=0;
+    
+    if(events&EVENT_GUI_EXCEPTION){ //发生异常
+        fns_ExceptionForm_create();//所有窗口退出，显示异常界面
+        return;
+    }
+    
+    drv_Form_onEvents(events &(~EVENT_GUI_EXCEPTION));//具体界面显示及操作
+    
+    if( (events&EVENT_GUI_TICK) && ( drv_Time_getTick()>(lastTick+300))  ){
+        //没有什么事件需要处理时,刷新屏幕
+        if(drv_Form_isDirty()){
+            drv_Form_doShow();
+        }
+    }
+}
+
+static CALLBACK_MSG _msgHandler[]={        
+    {drv_Form_onMsg,MSGID_GUI_CHAR},
+};
+
+void drv_GuiTask_init(FUNCTION_MSG app_GUI_onBeforeMsg,FUNCTION_MSG app_GUI_onAfterMsg){
+    s_hookBeforeMsg=app_GUI_onBeforeMsg;
+    s_hookAfterMsg=app_GUI_onAfterMsg;        
+    drv_GuiTask_register("GUI",hook_GUI_onEvents,_msgHandler,sizeof(_msgHandler)/sizeof(CALLBACK_MSG));
+
 }
