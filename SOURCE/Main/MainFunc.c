@@ -16,7 +16,7 @@ void hook_Keyboard_onPress(UInt32 keyVal,UInt32 keyState){
     drv_Led_start(LED_2,1,500,0);
 }
 
-UInt32 lftick;
+
 void drv_System_tick(UInt32 nowTick){ //软件定时器tick
     UInt32 flag;
     

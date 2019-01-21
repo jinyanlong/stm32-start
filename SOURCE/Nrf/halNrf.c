@@ -172,6 +172,8 @@ void drv_NrfComm_onEvent(void){ //解析数据
             drv_CommFunc_setError(&_pcCommUart.rspPacket,ERRCODE_LF_BUSY);
         }//else OK
         
+        drv_Led_start(LED_2,2,-100,100);
+
         if(_pcCommUart.rspPacket.CLA!=0){
             UInt8 protocol=0x80; //无地址模式
             drv_Comm_sendPacket(_pcCommUart.pUart,&protocol,&_pcCommUart.rspPacket);

@@ -18,7 +18,6 @@
 extern bool _IsAppStarted;
 
 void appTaskStart(void){
-    app_GUI_showSplash();
     drv_RaceTask_init();
     // drv_GuiTask_init(app_GUI_onBeforeMsg,app_GUI_onAfterMsg);
     drv_TimeTick_init();
@@ -54,11 +53,14 @@ void appConfig(void){
 void preAppStartInit(void){
     _IsAppStarted=false;
     drv_Exception_init(app_Exception_onRaise);
+    drv_Led_start(LED_1,1,0,100);
+    hal_Led_on(LED_1);
 }
 
 void afterAppStartInit(void){
-    _IsAppStarted=true;
     fns_Beep_ok(1);
+    app_GUI_showSplash();
+    _IsAppStarted=true;
 }
 
 int main(void){

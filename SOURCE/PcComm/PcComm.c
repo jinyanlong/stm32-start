@@ -46,6 +46,8 @@ void drv_PcComm_onEvent(void){//数据解析
 
     if(parser.state==UART_PACKETSTATE_OK){//表明接收Packet,以下对该包作处理
         if( FVCLA_GETTYPE(pUartHandler->cmdPacket.CLA)==FVTYPE_COMMAND ){
+            drv_Led_start(LED_2,2,100,-100);
+
             drv_Comm_onCommand(&pUartHandler->cmdPacket,&pUartHandler->rspPacket);
             if(_pcCommUart.lazyMode) return;
 

@@ -4,7 +4,7 @@
 #include "halAT45DB.h"
 #include "SFILE.h"
 #include "RealTimer.h"
-//#include "Beep.h"
+#include "Beep.h"
 #include "RaceFunc.h"
 #include "CommDriver.h"
 
@@ -120,7 +120,6 @@ void drv_CommonFunc_setAttr(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
 
 void drv_CommonFunc_beep(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
     
-#if defined(__BOARD_PIGEON_V7)   
     FV_COMMAND_PWM* pPWMCmd=(FV_COMMAND_PWM*)fvCmd->PARAMS;
    	if(fvCmd->LEN<sizeof(FV_COMMAND_PWM)){
         drv_CommFunc_setError(fvRsp,ERRCODE_CMD_PARAMS);
@@ -137,8 +136,7 @@ void drv_CommonFunc_beep(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
         }else {
             fns_Beep_stop();
         }
-    }
-#endif    
+    } 
     
 }
 
