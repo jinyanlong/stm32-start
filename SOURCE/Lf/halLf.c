@@ -185,7 +185,7 @@ void LF_IRQHandler(void){
 //    memcpy(buffer+2,&crc16,2);
 
 //}
-//unsigned char m_MC_buf[90]=  //通道一//@@1
+//unsigned char m_MC_buf[90]=  //通道一
 //{
 //0,
 //1,0,1,0,//（*）原配置为0,1,0 这里可以做调整 后觉得该为最少六位premble,改变preamble的长度可以影响到标签复位时钟的个数，减少preamble收到复位时钟也减少，反之则反

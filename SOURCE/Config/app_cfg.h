@@ -40,7 +40,6 @@
 #define DEVICEID (*(u32*)(ROM_UID_OFFSET+8))
 
 
-
 #define DEV_TYPE  0x3013    //¶ÁÐ´Æ÷
 #define DEV_VER   0x0210
 
