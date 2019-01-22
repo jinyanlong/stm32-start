@@ -1,5 +1,6 @@
 #include "includes.h"
 #include "RealTimer.h"
+#include "halCPU.h"
 
 FUNCTION_TICK s_hookTick=NULL;
 TimerHandle_t _tickHandler;
@@ -118,9 +119,33 @@ Int64 fns_Time_get(void){
     return val;
 }
 
+void drv_CPU_reset(int reason){
+    (void)reason; 
+    hal_CPU_reset();
+}
 
+extern volatile UInt32 s_main_activeTick;
+void drv_System_tick(UInt32 nowTick){
+    UInt32 flag;
+    
+    hal_IDOG_flush();
+    if(drv_CPU_checkReset(nowTick)){
+        drv_CPU_reset(0);
+    }  
 
-extern void drv_System_tick(UInt32 nowTick);
+    if(drv_RaceTask_isReady()){
+#ifndef __DEBUG
+        //检查每一个TASK最后的刷新时刻
+        if( nowTick > (s_main_activeTick+TASK_RACE_OVERTIME) ){
+            drv_CPU_reset(-1);
+        }
+#endif
+
+    flag=fns_Event_test(EVENT_RX_NRFCOMM|EVENT_RX_PCCOMM);
+    event_RaceTask_raise(flag|EVENT_MAIN_TICK);
+
+    }
+}
 //采用最高的任务优先级,所以一律不需要taskDISABLE_INTERRUPTS/taskENABLE_INTERRUPTS
 void drv_TimeTick_callback( TimerHandle_t xTimer ){//软件定时器tick
     _nowTick=hal_RTC_getCount();//周期性刷新时间

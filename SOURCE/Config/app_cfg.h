@@ -1,23 +1,6 @@
 #ifndef  __APP_CFG_H__
 #define  __APP_CFG_H__
 
-//#define EC20_GPS_ENABLE  //默认不启动GPS
-#ifndef __NET_DISABLE
-    //#define __NET           //网络使能
-#endif
-
-#ifdef __BOARD_181213   //小铁盒,无显示屏，有LED灯
-    //旧版180928也采用这个配置,但没有RS485
-    #define __LED
-    #define __RS485
-
-#endif
-
-#ifdef __BOARD_PIGEON_V7    //V7鸽钟改造,有显示屏
-    #define __GUI
-    #define __BEEP
-#endif
-
 #ifdef STM32F10X_LD
     #error "STM32F10X_LD is unsupport!"
 #elif defined STM32F10X_MD
@@ -83,22 +66,14 @@
 
 
 //////////////////事件,所有任务都放在一起//////////////////////
-#define EVENT_RACE_TICK         0x01     //时间片
-#define EVENT_RACE_MSG          0x02     //消息队列中有数据
-#define EVENT_RACE_RX_COMM      0x04     //通讯串口收到数据包
-#define EVENT_RACE_RX_GPS       0x08     //GPS串口收到数据包
-#define EVENT_RACE_RX_COMM485      0x10     
-//#define EVENT_RACE_TAGLIST      0x10     //发现标签队列有数据
-#define EVENT_RACE_REUPLOAD     0x20     //重新上传记录
+#define EVENT_MAIN_TICK         0x01     //时间片
+#define EVENT_MAIN_MSG          0x02     //消息队列中有数据
+#define EVENT_MAIN_RX_COMM      0x04     //通讯串口收到数据包
+#define EVENT_MAIN_RX_COMM485      0x08    
 
 
-#define EVENT_GSM_TICK      0x01     //时间片
-#define EVENT_GSM_MSG       0x02     //消息队列中有数据
-#define EVENT_GSM_CHECK     0x04     //GSM任务中使用,查询状态
-#define EVENT_GSM_RESET     0x08     //复位GSM模块
-#define EVENT_RACE_TAGLIST      0x10     //发现标签队列有数据
-#define EVENT_RX_NRFCOMM     0x20     //2.G串口数据
-#define EVENT_RX_PCCOMM     0x40     //对外pc串口
+#define EVENT_RX_NRFCOMM     0x01     //2.G串口数据
+#define EVENT_RX_PCCOMM     0x02     //对外pc串口
 
 
 #define EVENT_CAN_TICK  0x01
@@ -125,7 +100,7 @@
 //任务堆栈
 #define STACKSIZE_GPRSTASK   200
 #define STACKSIZE_GUITASK    400
-#define STACKSIZE_RACETASK   400
+#define STACKSIZE_MAINTASK   400
 
 
 #define TASK_GSM_OVERTIME    60000      //GSM模块,4G启动时间就需要10秒
@@ -138,7 +113,7 @@
 //任务优先级
 //#define TASK_PRIORITY_TICK      tskIDLE_PRIORITY+6    //优先级最高,任何操作都不需要LOCK OS
 #define TASK_PRIORITY_CAN       tskIDLE_PRIORITY+5      //要求处理速度比较高
-#define TASK_PRIORITY_RACE      tskIDLE_PRIORITY+4      //工作例程(FLASH在此例程中直接操作)
+#define TASK_PRIORITY_MAIN      tskIDLE_PRIORITY+4      //工作例程(FLASH在此例程中直接操作)
 
 #define TASK_PRIORITY_RF        tskIDLE_PRIORITY+3      //RF和GSM对处理速度要求不高
 #define TASK_PRIORITY_GSM       tskIDLE_PRIORITY+2      //GSM模块失效时可能引起死循环(CTS/RTS导致),所以把优先级降到最低

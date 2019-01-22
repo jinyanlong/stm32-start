@@ -40,6 +40,5 @@
 #include    "SFLib.h"
 #include    "DesCrypt.h"
 #include    "app_cfg.h"
-#include    "Exception.h"
 
 #endif
