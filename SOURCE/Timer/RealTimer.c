@@ -1,6 +1,7 @@
 #include "includes.h"
 #include "RealTimer.h"
 #include "halCPU.h"
+#include "led.h"
 
 FUNCTION_TICK s_hookTick=NULL;
 TimerHandle_t _tickHandler;
@@ -125,6 +126,9 @@ void drv_CPU_reset(int reason){
 }
 
 extern volatile UInt32 s_main_activeTick;
+extern void event_RaceTask_raise(UInt32 event);
+extern bool drv_MainTask_isReady(void);
+
 void drv_System_tick(UInt32 nowTick){
     UInt32 flag;
     
@@ -133,13 +137,15 @@ void drv_System_tick(UInt32 nowTick){
         drv_CPU_reset(0);
     }  
 
-    if(drv_RaceTask_isReady()){
+    if(drv_MainTask_isReady()){
 #ifndef __DEBUG
         //检查每一个TASK最后的刷新时刻
         if( nowTick > (s_main_activeTick+TASK_RACE_OVERTIME) ){
             drv_CPU_reset(-1);
         }
 #endif
+
+    drv_Led_tick(nowTick);
 
     flag=fns_Event_test(EVENT_RX_NRFCOMM|EVENT_RX_PCCOMM);
     event_RaceTask_raise(flag|EVENT_MAIN_TICK);

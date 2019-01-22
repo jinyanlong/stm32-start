@@ -3,6 +3,7 @@
 #include "MainTask.h"
 #include "MainData.h"
 #include "RealTimer.h"
+#include "Led.h"
 
 UInt8 s_systemId[4]={0,0,0,0};  //前2字节为代理商编号,后2字节为学校编号
 UInt32 s_systemMark=0;
@@ -18,17 +19,24 @@ static UInt32 _mainTask_stack[STACKSIZE_MAINTASK];
 static StaticTask_t _mainTask_tcb;
 static StaticEventGroup_t m_mainEvents_pcb;
 
-bool m_RaceTask_ready=false;
-bool drv_RaceTask_isReady(void){
-    return m_RaceTask_ready;
+bool m_MainTask_ready=false;
+bool drv_MainTask_isReady(void){
+    return m_MainTask_ready;
 }
 void event_RaceTask_raise(UInt32 event){
     xEventGroupSetBits(m_mainEvents,event);
 }
 
 void drv_MainTask_onTick(void){
-    int a=10l;
-    a=20;
+    static UInt32 tickOut=0;
+
+    UInt32 nowTick;
+    s_main_activeTick=nowTick=drv_Time_getTick();
+
+    if(nowTick>tickOut){
+        tickOut=nowTick+1000;
+        drv_Led_start(LED_RED,1,500,0);
+    }
 }
 
 void drv_MainTask_onMsg(MESSAGE* pMsg){
@@ -40,7 +48,7 @@ void drv_MainTask_onMsg(MESSAGE* pMsg){
 
 void drv_mainTask_run(void *p){
     EventBits_t event;
-    m_RaceTask_ready=true;
+    m_MainTask_ready=true;
 
     while(1){
         event= xEventGroupWaitBits(m_mainEvents,EVENT_TASK_ALL,pdTRUE,pdFALSE,portMAX_DELAY);

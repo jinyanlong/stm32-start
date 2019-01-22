@@ -4,8 +4,8 @@
 
 #define LED_MAXCOUNT  2
 
-#define LED_1      1        
-#define LED_2      2 
+#define LED_1      0        
+#define LED_2      1 
 
 
 #define LED_RED     LED_1   

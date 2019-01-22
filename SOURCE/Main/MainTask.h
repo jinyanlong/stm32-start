@@ -47,7 +47,7 @@ typedef struct _MONITOR{
     //GPSINFO gps;
 }MONITOR;
 
-bool drv_RaceTask_isReady(void);
+bool drv_MainTask_isReady(void);
 void event_RaceTask_raise(UInt32 event);
 void drv_MainTask_init(void);
 

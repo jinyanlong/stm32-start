@@ -2,6 +2,7 @@
 #include "halCPU.h"
 #include "RealTimer.h"
 #include "MainTask.h"
+#include "Led.h"
 
 bool _IsAppStarted;
 
@@ -13,11 +14,14 @@ void appTaskStart(void){
 void appInit(void){  
     drv_CPU_init(); 
     drv_Time_init();
+    hal_Led_on(LED_RED);
+    // hal_Led_on(LED_BLUE);
 }
 
 void appConfig(void){
 	hal_CPU_config();  
     hal_RTC_config();   
+    hal_Led_config();
 }
 
 void preAppStartInit(void){
