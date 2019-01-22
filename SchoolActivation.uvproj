@@ -932,6 +932,21 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>Src-Led</GroupName>
+          <Files>
+            <File>
+              <FileName>halLED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Led\halLED.c</FilePath>
+            </File>
+            <File>
+              <FileName>Led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Led\Led.c</FilePath>
+            </File>
+          </Files>
+        </Group>
       </Groups>
     </Target>
     <Target>
@@ -1857,6 +1872,21 @@
               <FileName>halRTC.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\SOURCE\Timer\halRTC.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Src-Led</GroupName>
+          <Files>
+            <File>
+              <FileName>halLED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Led\halLED.c</FilePath>
+            </File>
+            <File>
+              <FileName>Led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Led\Led.c</FilePath>
             </File>
           </Files>
         </Group>
