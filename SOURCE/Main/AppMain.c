@@ -15,7 +15,6 @@ void appInit(void){
     drv_CPU_init(); 
     drv_Time_init();
     hal_Led_on(LED_RED);
-    // hal_Led_on(LED_BLUE);
 }
 
 void appConfig(void){

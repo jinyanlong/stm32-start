@@ -1,63 +1,36 @@
-#include "includes.h"
-#include "halLED.h"
+#include <includes.h>
+#include "Led.h"
 
-#define LEDPIN_ON  1
-#define LEDPIN_OFF 0
 
-#ifdef __LED
+void hal_Led_config(void){//pb12-red|pb13  1-open
+	GPIO_InitTypeDef  gpio_init;
+    
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO| RCC_APB2Periph_GPIOB,ENABLE);
 
-#define LED_PORT1_PIN  GPIOB_ODR_BIT(12)
-#define LED_PORT2_PIN  GPIOB_ODR_BIT(13)
-
-void hal_Led_config(void){//pb12-red|pb13
-    GPIO_InitTypeDef  gpio_init;
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB|RCC_APB2Periph_AFIO,ENABLE);
-	LED_PORT1_PIN=0;
-    LED_PORT2_PIN=0;
-    gpio_init.GPIO_Speed = GPIO_Speed_50MHz;
-    gpio_init.GPIO_Pin =GPIO_Pin_12|GPIO_Pin_13;
-    gpio_init.GPIO_Mode = GPIO_Mode_Out_PP;
-    GPIO_Init(GPIOB, &gpio_init);
-
+	gpio_init.GPIO_Speed=GPIO_Speed_50MHz;
+   
+    GPIOB_ODR_BIT(LED_1_PIN)=GPIOB_ODR_BIT(LED_2_PIN)=0;
+	gpio_init.GPIO_Mode = GPIO_Mode_Out_PP;
+	gpio_init.GPIO_Pin  = 1<<LED_1_PIN|1<<LED_2_PIN;
+	GPIO_Init(GPIOB, &gpio_init);
 }
 
-void hal_Led_on(UInt8 pinNo){
-    if(pinNo==LED_1){
-        LED_PORT1_PIN=LEDPIN_ON;
-    }else if(pinNo==LED_2){
-        LED_PORT2_PIN= LEDPIN_ON;
-    }
-}
-void hal_Led_off(UInt8 pinNo){
-    if(pinNo==LED_1){
-        LED_PORT1_PIN=LEDPIN_OFF;
-    }else if(pinNo==LED_2){
-        LED_PORT2_PIN=LEDPIN_OFF;
-    }
-}
-bool hal_Led_isON(UInt8 pinNo){
-    if(pinNo==LED_1){
-        return LED_PORT1_PIN==LEDPIN_ON; 
-    }else if(pinNo==LED_2){
-        return LED_PORT2_PIN==LEDPIN_ON;
-    }
-    return false;
-}
-void hal_Led_toggle(UInt8 pinNo){
-    if(pinNo==LED_1){
-        if(LED_PORT1_PIN==LEDPIN_OFF){
-            LED_PORT1_PIN=LEDPIN_ON;
-        }else{
-            LED_PORT1_PIN=LEDPIN_OFF;
-        }
-    }else if(pinNo==LED_2){
-        if(LED_PORT2_PIN==LEDPIN_OFF){
-            LED_PORT2_PIN=LEDPIN_ON;
-        }else{
-            LED_PORT2_PIN=LEDPIN_OFF;
-        }            
+void hal_Led_set(UInt8 ledNo,UInt8 val){
+     switch(ledNo){
+    case LED_1:
+        GPIOB_ODR_BIT(LED_1_PIN)=val;
+        break;
+    case LED_2:
+        GPIOB_ODR_BIT(LED_2_PIN)=val;
+        break;     
     }
 }
 
-#endif
+void hal_Led_on(UInt8 ledNo){
+    hal_Led_set(ledNo,LED_ON);
+}
+
+void hal_Led_off(UInt8 ledNo){
+    hal_Led_set(ledNo,LED_OFF);
+}
 

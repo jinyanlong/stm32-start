@@ -35,7 +35,7 @@ void drv_MainTask_onTick(void){
 
     if(nowTick>tickOut){
         tickOut=nowTick+1000;
-        drv_Led_start(LED_RED,1,500,0);
+        drv_Led_start(LED_RED,1,200,0);
     }
 }
 
