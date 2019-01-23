@@ -26,7 +26,8 @@
 			"led.h": "c",
 			"beep.h": "c",
 			"maintask.h": "c",
-			"realtimer.h": "c"
+			"realtimer.h": "c",
+			"lf.h": "c"
 		},
 		"files.exclude": {
 			"**/LFActiverSchool": true

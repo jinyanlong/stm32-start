@@ -3,7 +3,7 @@
 #include "RealTimer.h"
 #include "MainTask.h"
 #include "Led.h"
-#include "lf.h"
+#include "Lf.h"
 
 bool _IsAppStarted;
 
@@ -22,7 +22,7 @@ void appConfig(void){
 	hal_CPU_config();  
     hal_RTC_config();   
     hal_Led_config();
-    hal_LF_config();
+    drv_LF_config();
 }
 
 void preAppStartInit(void){

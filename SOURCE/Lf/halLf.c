@@ -1,10 +1,6 @@
 #include <includes.h>
 #include "halLF.h"
 
-#define LF_DOUTA_PINNO           14
-#define LF_DOUTB_PINNO           12
-#define LF_DOUTM_PINNO           10
-#define LF_DOUTN_PINNO           7
 #define LF_IRQHandler  TIM3_IRQHandler
 
 #define LF_AC1_PIN 6
@@ -24,45 +20,57 @@
 #define LF_NC3_PIN 12
 #define LF_NC4_PIN 15
 
-__INLINE bool LF_DOUT_IS_HIGH(uint8_t pin){
+__INLINE bool LF_DOUT_IS_HIGH(uint8_t ant){
     bool result=false;
-    switch(pin){
-        case LF_DOUTA_PINNO:
-        case LF_DOUTB_PINNO:
-        case LF_DOUTM_PINNO:
-            result=(GPIOC_IDR_BIT(pin)==1);
+    switch(ant){
+        case LF_ANTA:
+            result=(GPIOC_IDR_BIT(LF_ANTA_DOUTPIN)==1);
             break;
-        case LF_DOUTN_PINNO:        
-            result=(GPIOA_IDR_BIT(pin)==1);
+        case LF_ANTB:
+            result=(GPIOC_IDR_BIT(LF_ANTM_DOUTPIB)==1);
+            break;
+        case LF_ANTM:
+            result=(GPIOC_IDR_BIT(LF_ANTM_DOUTPIN)==1);
+            break;
+        case LF_ANTN:        
+            result=(GPIOA_IDR_BIT(LF_ANTN_DOUTPIN)==1);
             break;
         default:
             break;
     }
     return result;
 }
-__INLINE void LF_DOUT_SET_LOW(uint8_t pin){
-    switch(pin){
-        case LF_DOUTA_PINNO:
-        case LF_DOUTB_PINNO:
-        case LF_DOUTM_PINNO:
-            GPIOC_ODR_BIT(pin)=0;
+__INLINE void LF_DOUT_SET_LOW(uint8_t ant){
+    switch(ant){
+        case LF_ANTA:
+            GPIOC_ODR_BIT(LF_ANTA_DOUTPIN)=0;
             break;
-        case LF_DOUTN_PINNO:        
-            GPIOA_ODR_BIT(pin)=0;
+        case LF_ANTB:
+            GPIOC_ODR_BIT(LF_ANTM_DOUTPIB)=0;
+            break;
+        case LF_ANTM:
+            GPIOC_ODR_BIT(LF_ANTM_DOUTPIN)=0;
+            break;
+        case LF_ANTN:        
+            GPIOA_ODR_BIT(LF_ANTN_DOUTPIN)=0;
             break;
         default:
             break;
     }
 }
-__INLINE void LF_DOUT_SET_HIGH(uint8_t pin){
-    switch(pin){
-        case LF_DOUTA_PINNO:
-        case LF_DOUTB_PINNO:
-        case LF_DOUTM_PINNO:
-            GPIOC_ODR_BIT(pin)=1;
+__INLINE void LF_DOUT_SET_HIGH(uint8_t ant){
+    switch(ant){
+        case LF_ANTA:
+            GPIOC_ODR_BIT(LF_ANTA_DOUTPIN)=1;
             break;
-        case LF_DOUTN_PINNO:        
-            GPIOA_ODR_BIT(pin)=1;
+        case LF_ANTB:
+            GPIOC_ODR_BIT(LF_ANTM_DOUTPIB)=1;
+            break;
+        case LF_ANTM:
+            GPIOC_ODR_BIT(LF_ANTM_DOUTPIN)=1;
+            break;
+        case LF_ANTN:        
+            GPIOA_ODR_BIT(LF_ANTN_DOUTPIN)=1;
             break;
         default:
             break;
@@ -75,20 +83,51 @@ void hal_LF_OutPin_config(void){//pc14-A|pc12-b|pc9-M|pa7-n
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOC,ENABLE);
 
-    LF_DOUT_SET_LOW(LF_DOUTA_PINNO);
-    LF_DOUT_SET_LOW(LF_DOUTB_PINNO);
-    LF_DOUT_SET_LOW(LF_DOUTM_PINNO);
-    LF_DOUT_SET_LOW(LF_DOUTN_PINNO);
+    LF_DOUT_SET_LOW(LF_ANTA);
+    LF_DOUT_SET_LOW(LF_ANTB);
+    LF_DOUT_SET_LOW(LF_ANTM);
+    LF_DOUT_SET_LOW(LF_ANTN);
 
 	gpio_init.GPIO_Speed=GPIO_Speed_50MHz;
-    gpio_init.GPIO_Pin  = (1<<LF_DOUTA_PINNO)| (1<<LF_DOUTB_PINNO)| (1<<LF_DOUTM_PINNO);
+    gpio_init.GPIO_Pin  = (1<<LF_ANTA_DOUTPIN)| (1<<LF_ANTB_DOUTPIN)| (1<<LF_ANTM_DOUTPIN);
     gpio_init.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(GPIOC, &gpio_init);
 
     gpio_init.GPIO_Speed=GPIO_Speed_50MHz;
-    gpio_init.GPIO_Pin  = (1<<LF_DOUTN_PINNO);
+    gpio_init.GPIO_Pin  = (1<<LF_ANTN_DOUTPIN);
     gpio_init.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(GPIOA, &gpio_init);      
+}
+
+void hal_LF_SetCapPin(uint8_t ant,uint8_t val){
+    switch(ant){
+        case LF_ANTA:
+            GPIOB_ODR_BIT(LF_AC1_PIN)=((val)&(0x01));
+            GPIOB_ODR_BIT(LF_AC2_PIN)=((val)&(0x02));
+            GPIOB_ODR_BIT(LF_AC3_PIN)=((val)&(0x04));
+            GPIOB_ODR_BIT(LF_AC4_PIN)=((val)&(0x08));
+            break;
+        case LF_ANTB:
+            GPIOB_ODR_BIT(LF_BC1_PIN)=((val)&(0x01));
+            GPIOB_ODR_BIT(LF_BC2_PIN)=((val)&(0x02));
+            GPIOB_ODR_BIT(LF_BC3_PIN)=((val)&(0x04));
+            GPIOC_ODR_BIT(LF_BC4_PIN)=((val)&(0x08));
+            break;
+        case LF_ANTM:
+            GPIOC_ODR_BIT(LF_MC1_PIN)=((val)&(0x01));
+            GPIOC_ODR_BIT(LF_MC2_PIN)=((val)&(0x02));
+            GPIOC_ODR_BIT(LF_MC3_PIN)=((val)&(0x04));
+            GPIOC_ODR_BIT(LF_MC4_PIN)=((val)&(0x08));
+            break;
+        case LF_ANTN:        
+            GPIOA_ODR_BIT(LF_NC1_PIN)=((val)&(0x01));
+            GPIOA_ODR_BIT(LF_NC2_PIN)=((val)&(0x02));
+            GPIOA_ODR_BIT(LF_NC3_PIN)=((val)&(0x04));
+            GPIOA_ODR_BIT(LF_NC4_PIN)=((val)&(0x08));
+            break;
+        default:
+            break;
+    }
 }
 
 //pb6-a1|pb5-a2|pb4-a3|pb3-a4|pb7-b1|pb8-b2|pb9-b3|pc13-b4|
@@ -100,26 +139,10 @@ void hal_LF_CapPin_config(void){
     // GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE);//完全禁用SWD及JTAG 
     GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);     //禁用JTAG
 
-    
-    GPIOA_ODR_BIT(LF_NC1_PIN)=0;
-    GPIOA_ODR_BIT(LF_NC2_PIN)=0;
-    GPIOA_ODR_BIT(LF_NC3_PIN)=0;
-    GPIOA_ODR_BIT(LF_NC4_PIN)=0;
-
-    GPIOB_ODR_BIT(LF_AC1_PIN)=0;
-    GPIOB_ODR_BIT(LF_AC2_PIN)=0;
-    GPIOB_ODR_BIT(LF_AC3_PIN)=0;
-    GPIOB_ODR_BIT(LF_AC4_PIN)=0;
-
-    GPIOB_ODR_BIT(LF_BC1_PIN)=0;
-    GPIOB_ODR_BIT(LF_BC2_PIN)=0;
-    GPIOB_ODR_BIT(LF_BC3_PIN)=0;
-    GPIOC_ODR_BIT(LF_BC4_PIN)=0;
-
-    GPIOC_ODR_BIT(LF_MC1_PIN)=0;
-    GPIOC_ODR_BIT(LF_MC2_PIN)=0;
-    GPIOC_ODR_BIT(LF_MC3_PIN)=0;
-    GPIOC_ODR_BIT(LF_MC4_PIN)=0;
+    hal_LF_SetCapPin(LF_ANTA,0x00);
+    hal_LF_SetCapPin(LF_ANTB,0x00);
+    hal_LF_SetCapPin(LF_ANTM,0x00);
+    hal_LF_SetCapPin(LF_ANTN,0x00);
 
 	gpio_init.GPIO_Speed=GPIO_Speed_50MHz;
     gpio_init.GPIO_Pin  = (1<<LF_NC1_PIN)|(1<<LF_NC2_PIN)|(1<<LF_NC3_PIN)|(1<<LF_NC4_PIN);
@@ -174,11 +197,11 @@ static __INLINE void hal_LF_stopTimer(void){
 }
 
 //设置输出管脚电平
-static __INLINE void LF_SETBIT(uint8_t pin,uint8_t bit){
+static __INLINE void LF_SETBIT(uint8_t ant,uint8_t bit){
     if(bit == 1 ){
-         LF_DOUT_SET_HIGH(pin); 
+         LF_DOUT_SET_HIGH(ant); 
     }else if(bit == 0){
-         LF_DOUT_SET_LOW(pin); 
+         LF_DOUT_SET_LOW(ant); 
     }        
 }
 
@@ -261,7 +284,6 @@ void drv_MCBuff_create(uint16_t coinId){
 }
 
 void drv_LF_init(void){
-
     m_phase_buffer=PTR_BITADDR(_buffer,0);
     drv_MCBuff_reset();
     hal_LF_initTimer();
@@ -277,12 +299,23 @@ void drv_LF_send(uint16_t coinId){
     drv_LF_wait();
 }
 
+void hal_OpenLF(uint8_t ant){
+    drv_LF_wait();
+    LF_DOUT_SET_HIGH(ant);
+}
+
+void hal_CloseLF(uint8_t ant){
+    drv_LF_wait();
+    LF_DOUT_SET_LOW(ant);
+}
+
+
 void LF_IRQHandler(void){
     if(TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET){       
         TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
         
         if(m_phase_sof<m_phase_eof){
-            LF_SETBIT(LF_DOUTN_PINNO,m_phase_buffer[m_phase_sof++]);
+            LF_SETBIT(LF_ANTA,m_phase_buffer[m_phase_sof++]);
         }
         
         if(m_phase_sof>=m_phase_eof){
@@ -290,4 +323,6 @@ void LF_IRQHandler(void){
         }
     }
 }
+
+
 
