@@ -4,6 +4,7 @@
 #include "MainData.h"
 #include "RealTimer.h"
 #include "Led.h"
+#include "halLf.h"
 
 UInt8 s_systemId[4]={0,0,0,0};  //前2字节为代理商编号,后2字节为学校编号
 UInt32 s_systemMark=0;
@@ -36,6 +37,8 @@ void drv_MainTask_onTick(void){
     if(nowTick>tickOut){
         tickOut=nowTick+1000;
         drv_Led_start(LED_RED,1,200,0);
+
+        drv_LF_send(0x0011);
     }
 }
 

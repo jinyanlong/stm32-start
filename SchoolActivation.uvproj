@@ -768,7 +768,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Src-Config</GroupName>
+          <GroupName>Config</GroupName>
           <Files>
             <File>
               <FileName>app_cfg.h</FileName>
@@ -798,7 +798,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Src-Share</GroupName>
+          <GroupName>Share</GroupName>
           <Files>
             <File>
               <FileName>DesBox.c</FileName>
@@ -863,7 +863,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Src-Main</GroupName>
+          <GroupName>Main</GroupName>
           <Files>
             <File>
               <FileName>AppMain.c</FileName>
@@ -883,7 +883,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Src-Hal_Driver</GroupName>
+          <GroupName>Hal_Driver</GroupName>
           <Files>
             <File>
               <FileName>halCPU.c</FileName>
@@ -908,7 +908,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Src-Timer</GroupName>
+          <GroupName>Timer</GroupName>
           <Files>
             <File>
               <FileName>RealTimer.c</FileName>
@@ -933,7 +933,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Src-Led</GroupName>
+          <GroupName>Led</GroupName>
           <Files>
             <File>
               <FileName>halLED.c</FileName>
@@ -944,6 +944,21 @@
               <FileName>Led.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\SOURCE\Led\Led.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Lf</GroupName>
+          <Files>
+            <File>
+              <FileName>halLf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Lf\halLf.c</FilePath>
+            </File>
+            <File>
+              <FileName>lf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Lf\lf.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1711,7 +1726,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Src-Config</GroupName>
+          <GroupName>Config</GroupName>
           <Files>
             <File>
               <FileName>app_cfg.h</FileName>
@@ -1741,7 +1756,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Src-Share</GroupName>
+          <GroupName>Share</GroupName>
           <Files>
             <File>
               <FileName>DesBox.c</FileName>
@@ -1806,7 +1821,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Src-Main</GroupName>
+          <GroupName>Main</GroupName>
           <Files>
             <File>
               <FileName>AppMain.c</FileName>
@@ -1826,7 +1841,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Src-Hal_Driver</GroupName>
+          <GroupName>Hal_Driver</GroupName>
           <Files>
             <File>
               <FileName>halCPU.c</FileName>
@@ -1851,7 +1866,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Src-Timer</GroupName>
+          <GroupName>Timer</GroupName>
           <Files>
             <File>
               <FileName>RealTimer.c</FileName>
@@ -1876,7 +1891,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Src-Led</GroupName>
+          <GroupName>Led</GroupName>
           <Files>
             <File>
               <FileName>halLED.c</FileName>
@@ -1887,6 +1902,21 @@
               <FileName>Led.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\SOURCE\Led\Led.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Lf</GroupName>
+          <Files>
+            <File>
+              <FileName>halLf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Lf\halLf.c</FilePath>
+            </File>
+            <File>
+              <FileName>lf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Lf\lf.c</FilePath>
             </File>
           </Files>
         </Group>
