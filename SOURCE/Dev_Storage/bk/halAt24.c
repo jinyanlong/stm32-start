@@ -11,7 +11,7 @@ bool hal_AT24C16_read(UInt8 Page,UInt16 uAddr,void * pData,UInt16 nLen){
 	bool ret;
 
 	hal_I2C_start();
-	ret=hal_I2C_send(Page | (uAddr>>7) & 0xFE); //写地址操作
+	ret=hal_I2C_send(Page | (uAddr>>7) & 0xFE); //写地址操作//@@1为什么跟写一样
 	if(!ret){
 		return false;
 	}

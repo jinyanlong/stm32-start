@@ -1,8 +1,6 @@
 #ifndef __HALI2C_001
 #define __HALI2C_001
 
-#include "haldelay.h"
-
 void hal_I2C_config(void);
 void hal_I2C_init(void);
 void hal_I2C_start(void);

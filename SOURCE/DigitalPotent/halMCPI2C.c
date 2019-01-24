@@ -7,7 +7,7 @@
 #define MCP2_SCL_PIN 14
 #define MCP2_SDA_PIN 15
 
-#define mcp_scl_delay()  delay_us(2)
+#define mcp_scl_delay()  delay_us(10)
 #define mcp_byte_delay() 
 
 __inline void mcp1_scl_1(void){
@@ -199,13 +199,13 @@ bool hal_MCPI2C_send(uint8_t val, unsigned char bytData){
 	return ret;
 }
 
-unsigned char hal_MCPI2C_receive(uint8_t val){
+unsigned char hal_MCPI2C_receive(uint8_t val){//跟at24不一样，需要等回复
 	unsigned char i,bytData;
 	if(val==MCP4018T_1){
 		bytData=0;
 		mcp1_sda_1();
 		mcp1_scl_1();
-		mcp1_byte_delay();	
+		mcp_byte_delay();	
 		for(i=0;i<8;i++){
 			mcp1_scl_1();
 			if(mcp1_sda_get()){
@@ -217,7 +217,7 @@ unsigned char hal_MCPI2C_receive(uint8_t val){
 		bytData=0;
 		mcp2_sda_1();
 		mcp2_scl_1();
-		mcp2_byte_delay();	
+		mcp_byte_delay();	
 		for(i=0;i<8;i++){
 			mcp2_scl_1();
 			if(mcp2_sda_get()){

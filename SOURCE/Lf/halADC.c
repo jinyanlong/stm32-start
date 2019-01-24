@@ -64,7 +64,7 @@ uint32_t hal_ADC_getAverageVal(uint8_t ch,uint8_t times){
 	for(t=0;t<times;t++)
 	{
 		temp_val+=hal_ADC_getValue(ch);
-		delay_ms(5);
+		delay_us(5000);
 	}
 	return temp_val/times;
 } 	

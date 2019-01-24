@@ -1,16 +1,12 @@
-#ifndef __HALAT24_001
-#define __HALAT24_001
+#ifndef __HALMCP4018T_
+#define __HALMCP4018T_
 
-#include "halI2C.h"
+#include "halMCPI2C.h"
+void hal_MCP4018_config(void);
+bool hal_MCP4018_read(UInt8 mcpNO,void * pData,UInt16 nLen);
+bool hal_MCP4018_write(UInt8 mcpNO,void * pData,UInt16 nLen);
 
-#define AT24_PAGE 0xA0  
-
-void hal_AT24C16_config(void);
-bool hal_AT24C16_read(UInt8 Page,UInt16 uAddr,void * pData,UInt16 len);
-bool hal_AT24C16_check(UInt8 Page,UInt16 uAddr,void * pData,UInt16 nLen);
-bool hal_AT24C16_write(UInt8 Page,UInt16 uAddr,void * pData,UInt16 nLen);
-
-#define hal_AT24C16_wdelay()  delay_us(5000)
+#define hal_MCP4018_wdelay()  delay_us(5000)
 
 #endif
 

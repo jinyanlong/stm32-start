@@ -36,7 +36,7 @@ bool hal_AT24C64_read(UInt8 Page,UInt16 uAddr,void * pData,UInt16 nLen){
 		hal_I2C_ack();
 	}
 	((UInt8*)pData)[i]=hal_I2C_receive();
-	hal_I2C_noack();
+	hal_I2C_noack();//@@1noack?????
 	hal_I2C_stop();
 	return true;	
 }

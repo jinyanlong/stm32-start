@@ -20,14 +20,19 @@
 #define LF_NC3_PIN 12
 #define LF_NC4_PIN 15
 
-__INLINE bool LF_DOUT_IS_HIGH(uint8_t ant){
+#define LF_ANTA_QVALPIN 15
+#define LF_ANTB_QVALPIN 2
+#define LF_ANTM_QVALPIN 11
+#define LF_ANTN_QVALPIN 4
+
+__INLINE bool LF_DOUT_IS_HIGH(UInt8 ant){
     bool result=false;
     switch(ant){
         case LF_ANTA:
             result=(GPIOC_IDR_BIT(LF_ANTA_DOUTPIN)==1);
             break;
         case LF_ANTB:
-            result=(GPIOC_IDR_BIT(LF_ANTM_DOUTPIB)==1);
+            result=(GPIOC_IDR_BIT(LF_ANTB_DOUTPIN)==1);
             break;
         case LF_ANTM:
             result=(GPIOC_IDR_BIT(LF_ANTM_DOUTPIN)==1);
@@ -40,13 +45,13 @@ __INLINE bool LF_DOUT_IS_HIGH(uint8_t ant){
     }
     return result;
 }
-__INLINE void LF_DOUT_SET_LOW(uint8_t ant){
+__INLINE void LF_DOUT_SET_LOW(UInt8 ant){
     switch(ant){
         case LF_ANTA:
             GPIOC_ODR_BIT(LF_ANTA_DOUTPIN)=0;
             break;
         case LF_ANTB:
-            GPIOC_ODR_BIT(LF_ANTM_DOUTPIB)=0;
+            GPIOC_ODR_BIT(LF_ANTB_DOUTPIN)=0;
             break;
         case LF_ANTM:
             GPIOC_ODR_BIT(LF_ANTM_DOUTPIN)=0;
@@ -58,13 +63,13 @@ __INLINE void LF_DOUT_SET_LOW(uint8_t ant){
             break;
     }
 }
-__INLINE void LF_DOUT_SET_HIGH(uint8_t ant){
+__INLINE void LF_DOUT_SET_HIGH(UInt8 ant){
     switch(ant){
         case LF_ANTA:
             GPIOC_ODR_BIT(LF_ANTA_DOUTPIN)=1;
             break;
         case LF_ANTB:
-            GPIOC_ODR_BIT(LF_ANTM_DOUTPIB)=1;
+            GPIOC_ODR_BIT(LF_ANTB_DOUTPIN)=1;
             break;
         case LF_ANTM:
             GPIOC_ODR_BIT(LF_ANTM_DOUTPIN)=1;
@@ -99,7 +104,7 @@ void hal_LF_OutPin_config(void){//pc14-A|pc12-b|pc9-M|pa7-n
     GPIO_Init(GPIOA, &gpio_init);      
 }
 
-void hal_LF_SetCapPin(uint8_t ant,uint8_t val){
+void hal_LF_SetCapPin(UInt8 ant,UInt8 val){
     switch(ant){
         case LF_ANTA:
             GPIOB_ODR_BIT(LF_AC1_PIN)=((val)&(0x01));
@@ -124,6 +129,26 @@ void hal_LF_SetCapPin(uint8_t ant,uint8_t val){
             GPIOA_ODR_BIT(LF_NC2_PIN)=((val)&(0x02));
             GPIOA_ODR_BIT(LF_NC3_PIN)=((val)&(0x04));
             GPIOA_ODR_BIT(LF_NC4_PIN)=((val)&(0x08));
+            break;
+        default:
+            break;
+    }
+}
+
+
+void hal_LF_SetQValPin(UInt8 ant,UInt8 val){
+    switch(ant){
+        case LF_ANTA:
+            GPIOC_ODR_BIT(LF_ANTA_QVALPIN)=val;
+            break;
+        case LF_ANTB:
+            GPIOD_ODR_BIT(LF_ANTB_QVALPIN)=val;
+            break;
+        case LF_ANTM:
+            GPIOC_ODR_BIT(LF_ANTM_QVALPIN)=val;
+            break;
+        case LF_ANTN:        
+            GPIOC_ODR_BIT(LF_ANTN_QVALPIN)=val;
             break;
         default:
             break;
@@ -159,9 +184,42 @@ void hal_LF_CapPin_config(void){
     GPIO_Init(GPIOC, &gpio_init);      
 }
 
+
+void hal_LF_QValPin_config(void){//a-pc15|b-pd2|m-pc11|n-pc4    0-OPEN
+	GPIO_InitTypeDef  gpio_init;
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC|RCC_APB2Periph_GPIOD|RCC_APB2Periph_AFIO,ENABLE);
+
+    hal_LF_SetQValPin(LF_ANTA,0x00);
+    hal_LF_SetQValPin(LF_ANTB,0x00);
+    hal_LF_SetQValPin(LF_ANTM,0x00);
+    hal_LF_SetQValPin(LF_ANTN,0x00);
+
+	gpio_init.GPIO_Speed=GPIO_Speed_50MHz;
+    gpio_init.GPIO_Pin  = (1<<LF_NC1_PIN)|(1<<LF_NC2_PIN)|(1<<LF_NC3_PIN)|(1<<LF_NC4_PIN);
+    gpio_init.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_Init(GPIOA, &gpio_init);
+
+    gpio_init.GPIO_Pin  = (1<<LF_AC1_PIN)|(1<<LF_AC2_PIN)|(1<<LF_AC3_PIN)|(1<<LF_AC4_PIN)| \
+                          (1<<LF_BC1_PIN)|(1<<LF_BC1_PIN)|(1<<LF_BC1_PIN);
+    gpio_init.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_Init(GPIOB, &gpio_init);  
+
+    gpio_init.GPIO_Pin  = (1<<LF_BC4_PIN)|(1<<LF_MC1_PIN)|(1<<LF_MC2_PIN)|(1<<LF_MC3_PIN)|(1<<LF_MC4_PIN);
+    gpio_init.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_Init(GPIOC, &gpio_init);      
+}
+
+void hal_open_LFQVAL(UInt8 ant){
+    hal_LF_SetQValPin(LF_ANTA,0);
+}
+void hal_close_LFQVAL(UInt8 ant){
+    hal_LF_SetQValPin(LF_ANTA,1);
+}
+
 void hal_LF_config(void){
     hal_LF_OutPin_config();//信号输出引脚配置
     hal_LF_CapPin_config();//电容调节引脚配置
+    hal_LF_QValPin_config();//Q值调整
 }
 
 
@@ -197,7 +255,7 @@ static __INLINE void hal_LF_stopTimer(void){
 }
 
 //设置输出管脚电平
-static __INLINE void LF_SETBIT(uint8_t ant,uint8_t bit){
+static __INLINE void LF_SETBIT(UInt8 ant,uint8_t bit){
     if(bit == 1 ){
          LF_DOUT_SET_HIGH(ant); 
     }else if(bit == 0){
@@ -299,12 +357,12 @@ void drv_LF_send(uint16_t coinId){
     drv_LF_wait();
 }
 
-void hal_OpenLF(uint8_t ant){
+void hal_OpenLF(UInt8 ant){
     drv_LF_wait();
     LF_DOUT_SET_HIGH(ant);
 }
 
-void hal_CloseLF(uint8_t ant){
+void hal_CloseLF(UInt8 ant){
     drv_LF_wait();
     LF_DOUT_SET_LOW(ant);
 }

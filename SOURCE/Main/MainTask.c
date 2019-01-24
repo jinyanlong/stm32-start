@@ -38,7 +38,7 @@ void drv_MainTask_onTick(void){
         tickOut=nowTick+1000;
         drv_Led_start(LED_RED,1,200,0);
 
-        drv_LF_send(0x0011);
+        // drv_LF_send(0x0011);
     }
 }
 

@@ -2,8 +2,7 @@
 #include "Flash.h"
 #include "halAT24.h"
 
-
-bool drv_Flash_check(UInt16 uAddr,void* pBuff,UInt32 nLen){
+bool drv_Flash_check(UInt16 uAddr,void* pBuff,UInt32 nLen){//本设备采用的是AT24C256(32k)
     return hal_AT24C64_check(0xA0,uAddr, pBuff,nLen);
 }
 bool drv_Flash_read(UInt16 uAddr,void* pBuff,UInt32 nLen){

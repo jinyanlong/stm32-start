@@ -8,9 +8,8 @@ void drv_LF_config(void){
     hal_ADC_config();
 }
 
-uint32_t get_LFANT_VCC(uint8_t ant){
+uint32_t get_LFANT_VCC(UInt8 ant){
     uint32_t val;
-    hal_OpenLF(ant);
     if(ant==LF_ANTA){
         val=hal_ADC_getAverageVal(ADC_Channel_10,5);
     }else if(ant==LF_ANTB){
@@ -20,7 +19,6 @@ uint32_t get_LFANT_VCC(uint8_t ant){
     }else if(ant==LF_ANTN){
         val=hal_ADC_getAverageVal(ADC_Channel_15,5);
     }
-    hal_CloseLF(ant);
     return val;
 }
 
@@ -31,17 +29,27 @@ uint32_t get_LFVPOW_VCC2(){
     return hal_ADC_getAverageVal(ADC_Channel_8,5);
 }
 
-uint8_t adjust_LFCap(uint8_t ant){//电容调整，获取最高电压
-    uint8_t i,pro=0,tmp=0;
-    for(i=0;i<16;i++){
+UInt8 drv_adjust_LFCap(UInt8 ant){//电容调整，获取最高电压
+    UInt32 vcc;
+    UInt8 i,pro=0,tmp=0;
+    hal_OpenLF(ant);
+    for(i=7;i<16;i++){
         hal_LF_SetCapPin(ant,i);
-        delay_ms(1);
-        if(tmp<get_LFANT_VCC(ant)){
+        delay_us(1000);
+        vcc=get_LFANT_VCC(ant);
+        if(tmp<vcc){
             pro=i;
+            tmp=vcc;
         }
     }
+    hal_CloseLF(ant);
     return pro;
 }
 
+void drv_open_LFQVAL(UInt8 ant){
+    hal_open_LFQVAL(ant);
+}
 
-
+void drv_close_LFQVAL(UInt8 ant){
+    hal_close_LFQVAL(ant);
+}   

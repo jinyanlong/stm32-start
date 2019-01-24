@@ -357,7 +357,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER, STM32F10X_HD,__LF_CRC16,__DEBUG</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\Libraries\CMSIS\Core\CM3;..\Libraries\CMSIS\Device\ST\STM32F10x\Include;..\FreeRTOS9\Source\include;..\FreeRTOS9\Source\portable\RVDS\ARM_CM3;.\Source;.\Source\CommFunc;.\Source\Config;.\Source\Form;.\Source\HAL_Driver;.\Source\HAL_PORT;.\Source\LFTAG;.\Source\SAM;.\Source\Share;.\Source\USB;.\SOURCE\CANReader;.\SOURCE\Draw;.\SOURCE\FILESYS;.\SOURCE\GPRS;.\SOURCE\GPS;.\SOURCE\Keyboard;.\SOURCE\Timer;.\SOURCE\Main;.\SOURCE\Led;.\SOURCE\Nrf;.\SOURCE\Lf;.\SOURCE\GUI;.\SOURCE\Flash;.\SOURCE\Comm;.\SOURCE\PcComm;.\SOURCE\Beep</IncludePath>
+              <IncludePath>..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\Libraries\CMSIS\Core\CM3;..\Libraries\CMSIS\Device\ST\STM32F10x\Include;..\FreeRTOS9\Source\include;..\FreeRTOS9\Source\portable\RVDS\ARM_CM3;.\Source;.\Source\CommFunc;.\Source\Config;.\Source\Form;.\Source\HAL_Driver;.\Source\HAL_PORT;.\Source\LFTAG;.\Source\SAM;.\Source\Share;.\Source\USB;.\SOURCE\CANReader;.\SOURCE\Draw;.\SOURCE\FILESYS;.\SOURCE\GPRS;.\SOURCE\GPS;.\SOURCE\Keyboard;.\SOURCE\Timer;.\SOURCE\Main;.\SOURCE\Led;.\SOURCE\Nrf;.\SOURCE\Lf;.\SOURCE\GUI;.\SOURCE\Flash;.\SOURCE\Comm;.\SOURCE\PcComm;.\SOURCE\Beep;.\SOURCE\DigitalPotent;.\SOURCE\Dev_Storage</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -956,9 +956,49 @@
               <FilePath>.\SOURCE\Lf\halLf.c</FilePath>
             </File>
             <File>
+              <FileName>halADC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Lf\halADC.c</FilePath>
+            </File>
+            <File>
               <FileName>lf.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\SOURCE\Lf\lf.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>DigitalPotent</GroupName>
+          <Files>
+            <File>
+              <FileName>halMCP4018T.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\DigitalPotent\halMCP4018T.c</FilePath>
+            </File>
+            <File>
+              <FileName>halMCPI2C.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\DigitalPotent\halMCPI2C.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Dev_Storage</GroupName>
+          <Files>
+            <File>
+              <FileName>flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Dev_Storage\flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>halAT24.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Dev_Storage\halAT24.c</FilePath>
+            </File>
+            <File>
+              <FileName>halI2C.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Dev_Storage\halI2C.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1914,9 +1954,49 @@
               <FilePath>.\SOURCE\Lf\halLf.c</FilePath>
             </File>
             <File>
+              <FileName>halADC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Lf\halADC.c</FilePath>
+            </File>
+            <File>
               <FileName>lf.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\SOURCE\Lf\lf.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>DigitalPotent</GroupName>
+          <Files>
+            <File>
+              <FileName>halMCP4018T.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\DigitalPotent\halMCP4018T.c</FilePath>
+            </File>
+            <File>
+              <FileName>halMCPI2C.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\DigitalPotent\halMCPI2C.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Dev_Storage</GroupName>
+          <Files>
+            <File>
+              <FileName>flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Dev_Storage\flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>halAT24.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Dev_Storage\halAT24.c</FilePath>
+            </File>
+            <File>
+              <FileName>halI2C.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Dev_Storage\halI2C.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -15,6 +15,8 @@ void drv_LF_init(void);
 void drv_LF_send(uint16_t coinId);
 void hal_OpenLF(uint8_t lfNo);
 void hal_CloseLF(uint8_t lfNo);
-void hal_LF_SetCapPin(uint8_t ant,uint8_t val);
+void hal_LF_SetCapPin(UInt8 ant,uint8_t val);
+void hal_open_LFQVAL(UInt8 ant);
+void hal_close_LFQVAL(UInt8 ant);
 
 #endif
