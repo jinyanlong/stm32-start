@@ -5,11 +5,9 @@
 #include "RealTimer.h"
 #include "Led.h"
 #include "halLf.h"
+#include "PcComm.h"
+#include "CommDriver.h"
 
-UInt8 s_systemId[4]={0,0,0,0};  //前2字节为代理商编号,后2字节为学校编号
-UInt32 s_systemMark=0;
-
-UInt8 s_systemKey[8];
 UInt8 _systemRnd[8];
 DESKEYSTRUCT desKey; //desKey实际上是局部变量,提升至全局,是为了减少栈空间消耗
 
@@ -28,10 +26,11 @@ void event_RaceTask_raise(UInt32 event){
     xEventGroupSetBits(m_mainEvents,event);
 }
 
+extern UartPacketHandler _pcCommUart;
 void drv_MainTask_onTick(void){
     static UInt32 tickOut=0;
-
     UInt32 nowTick;
+    FV_PACKET rspPacket;
     s_main_activeTick=nowTick=drv_Time_getTick();
 
     if(nowTick>tickOut){
@@ -39,7 +38,12 @@ void drv_MainTask_onTick(void){
         drv_Led_start(LED_RED,1,200,0);
 
         // drv_LF_send(0x0011);
+
+        // rspPacket.CLA=0x01;
+        // drv_Comm_sendPacket(_pcCommUart.pUart,0,&rspPacket);
     }
+
+
 }
 
 void drv_MainTask_onMsg(MESSAGE* pMsg){
@@ -48,7 +52,7 @@ void drv_MainTask_onMsg(MESSAGE* pMsg){
         break;
     }
 }
-
+extern UartPacketHandler _pcCommUart;
 void drv_mainTask_run(void *p){
     EventBits_t event;
     m_MainTask_ready=true;
@@ -58,6 +62,11 @@ void drv_mainTask_run(void *p){
 
         if(event&EVENT_MAIN_TICK){
             drv_MainTask_onTick();
+        }
+
+        if(event&EVENT_RX_PCCOMM){            
+            drv_PcComm_onEvent();
+            drv_Comm_startRx(&_pcCommUart);          
         }
                         
         if(event&EVENT_MAIN_MSG){

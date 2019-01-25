@@ -7,16 +7,29 @@
 #include "halMCP4018T.h"
 #include "halAt24.h"
 #include "flash.h"
+#include "PcComm.h"
 
 bool _IsAppStarted;
+UInt8  ROM_WORKMODE;
+UInt8  ROM_PROXYID[2];
+
+UInt8 s_systemId[4]={0,0,0,0};  //前2字节为代理商编号,后2字节为学校编号
+UInt32 s_systemMark=0;
+UInt8 s_systemKey[8];
+
+UInt16 m_antId=0x0011;
+
+extern UartPacketHandler _pcCommUart;
 
 void appTaskStart(void){
     UInt8 pro,val;
     bool result;
     uint8_t test1[3];
     uint8_t test[3]={'a','b','c'};
+
     drv_MainTask_init();
     drv_TimeTick_init();
+    
     // pro=drv_adjust_LFCap(LF_ANTA);
     // pro=drv_adjust_LFCap(LF_ANTB);
     // pro=drv_adjust_LFCap(LF_ANTM);
@@ -25,8 +38,8 @@ void appTaskStart(void){
     // result=hal_MCP4018_read(MCP4018T_1,&val,1);
     // result=hal_MCP4018_read(MCP4018T_2,&val,1);
 
-   // result=drv_Flash_write(FLASHADDR_BASEINFO,&test,3);
-    //result=drv_Flash_read(FLASHADDR_BASEINFO,&test1,3);
+   result=drv_Flash_write(FLASHADDR_BASEINFO,&test,3);
+    result=drv_Flash_read(FLASHADDR_BASEINFO,&test1,3);
 }
 
 void appInit(void){  
@@ -40,6 +53,7 @@ void appConfig(void){
 	hal_CPU_config();  
     hal_RTC_config();
     hal_AT24C64_config();   
+    hal_PcComm_config();
     hal_Led_config();
     drv_LF_config();
 }
@@ -49,6 +63,15 @@ void preAppStartInit(void){
 }
 
 void afterAppStartInit(void){
+    ROM_WORKMODE=~(*(u8*)(ROM_ADDRESS_START+ROM_PAGESIZE*ROM_CONFIG_PAGE) );
+    ROM_PROXYID[0]=~(*(u8*)(ROM_ADDRESS_START+ROM_PAGESIZE*ROM_CONFIG_PAGE+2) );
+    ROM_PROXYID[1]=~(*(u8*)(ROM_ADDRESS_START+ROM_PAGESIZE*ROM_CONFIG_PAGE+3) );//@@1为什么放在两页
+
+    fns_Flash_getSystemData(s_systemId,&s_systemMark,s_systemKey);
+    m_antId=fns_Flash_getAntId();
+
+    hal_UART_startRx(_pcCommUart.pUart);
+
     _IsAppStarted=true;
 }
 

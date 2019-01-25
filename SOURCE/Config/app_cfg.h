@@ -23,11 +23,9 @@
 #define DEVICEID (*(u32*)(ROM_UID_OFFSET+8))
 
 
-#define DEV_TYPE  0x3013    //读写器
-#define DEV_VER   0x0210
+#define DEV_TYPE  0x3014    //新版激活器
+#define DEV_VER   0x0001
 
-//V.00    变更协议
-//V1.26   发现一个严重BUG,数据不会删除,修复文件系统的BUG,修复网络长期无效,GSM模块不复位的问题
 
 #define S_FORMAT_DATA_TAG "FOFIAXYK"
 #define S_FORMAT_FONT_TAG "FOFIAFNT"
@@ -84,7 +82,6 @@
 
 
 //模拟中断
-#define EVENT_ISR_RX_GPS    EVENT_RACE_RX_GPS
 #define EVENT_ISR_RX_PCCOMM   EVENT_RX_PCCOMM //pc通信口
 #define EVENT_ISR_RX_NRFCOMM   EVENT_RX_NRFCOMM //pc通信口
 

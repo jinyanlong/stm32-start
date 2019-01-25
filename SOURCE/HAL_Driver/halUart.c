@@ -9,10 +9,6 @@
 void hal_UART_config(USART_TypeDef * pUart){
  	GPIO_InitTypeDef  gpio_init;
 	gpio_init.GPIO_Speed=GPIO_Speed_50MHz;
-
-    //    RCC_APB1PeriphClockCmd(
-//							| RCC_APB1Periph_USART2
-//							| RCC_APB1Periph_USART3,ENABLE);
     
 	if(pUart==USART1){
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO|RCC_APB2Periph_USART1|RCC_APB2Periph_GPIOA, ENABLE);

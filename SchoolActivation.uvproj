@@ -357,7 +357,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER, STM32F10X_HD,__LF_CRC16,__DEBUG</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\Libraries\CMSIS\Core\CM3;..\Libraries\CMSIS\Device\ST\STM32F10x\Include;..\FreeRTOS9\Source\include;..\FreeRTOS9\Source\portable\RVDS\ARM_CM3;.\Source;.\Source\CommFunc;.\Source\Config;.\Source\Form;.\Source\HAL_Driver;.\Source\HAL_PORT;.\Source\LFTAG;.\Source\SAM;.\Source\Share;.\Source\USB;.\SOURCE\CANReader;.\SOURCE\Draw;.\SOURCE\FILESYS;.\SOURCE\GPRS;.\SOURCE\GPS;.\SOURCE\Keyboard;.\SOURCE\Timer;.\SOURCE\Main;.\SOURCE\Led;.\SOURCE\Nrf;.\SOURCE\Lf;.\SOURCE\GUI;.\SOURCE\Flash;.\SOURCE\Comm;.\SOURCE\PcComm;.\SOURCE\Beep;.\SOURCE\DigitalPotent;.\SOURCE\Dev_Storage</IncludePath>
+              <IncludePath>..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\Libraries\CMSIS\Core\CM3;..\Libraries\CMSIS\Device\ST\STM32F10x\Include;..\FreeRTOS9\Source\include;..\FreeRTOS9\Source\portable\RVDS\ARM_CM3;.\Source;.\Source\CommFunc;.\Source\Config;.\Source\Form;.\Source\HAL_Driver;.\Source\HAL_PORT;.\Source\LFTAG;.\Source\SAM;.\Source\Share;.\Source\USB;.\SOURCE\CANReader;.\SOURCE\Draw;.\SOURCE\FILESYS;.\SOURCE\GPRS;.\SOURCE\GPS;.\SOURCE\Keyboard;.\SOURCE\Timer;.\SOURCE\Main;.\SOURCE\Led;.\SOURCE\Nrf;.\SOURCE\Lf;.\SOURCE\GUI;.\SOURCE\Flash;.\SOURCE\Comm;.\SOURCE\PcComm;.\SOURCE\Beep;.\SOURCE\DigitalPotent;.\SOURCE\Dev_Storage;.\SOURCEPcComm</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -880,6 +880,11 @@
               <FileType>1</FileType>
               <FilePath>.\SOURCE\Main\MainData.c</FilePath>
             </File>
+            <File>
+              <FileName>MainFunc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Main\MainFunc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -999,6 +1004,41 @@
               <FileName>halI2C.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\SOURCE\Dev_Storage\halI2C.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>PcComm</GroupName>
+          <Files>
+            <File>
+              <FileName>PcComm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\PcComm\PcComm.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Comm</GroupName>
+          <Files>
+            <File>
+              <FileName>CommDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Comm\CommDriver.c</FilePath>
+            </File>
+            <File>
+              <FileName>Func_Common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Comm\Func_Common.c</FilePath>
+            </File>
+            <File>
+              <FileName>Func_School.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Comm\Func_School.c</FilePath>
+            </File>
+            <File>
+              <FileName>FuncList.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Comm\FuncList.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1878,6 +1918,11 @@
               <FileType>1</FileType>
               <FilePath>.\SOURCE\Main\MainData.c</FilePath>
             </File>
+            <File>
+              <FileName>MainFunc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Main\MainFunc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1997,6 +2042,41 @@
               <FileName>halI2C.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\SOURCE\Dev_Storage\halI2C.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>PcComm</GroupName>
+          <Files>
+            <File>
+              <FileName>PcComm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\PcComm\PcComm.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Comm</GroupName>
+          <Files>
+            <File>
+              <FileName>CommDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Comm\CommDriver.c</FilePath>
+            </File>
+            <File>
+              <FileName>Func_Common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Comm\Func_Common.c</FilePath>
+            </File>
+            <File>
+              <FileName>Func_School.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Comm\Func_School.c</FilePath>
+            </File>
+            <File>
+              <FileName>FuncList.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SOURCE\Comm\FuncList.c</FilePath>
             </File>
           </Files>
         </Group>

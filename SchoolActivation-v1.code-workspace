@@ -27,7 +27,8 @@
 			"beep.h": "c",
 			"maintask.h": "c",
 			"realtimer.h": "c",
-			"lf.h": "c"
+			"lf.h": "c",
+			"commdriver.h": "c"
 		},
 		"files.exclude": {
 			"**/LFActiverSchool": true

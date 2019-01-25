@@ -1,5 +1,5 @@
-#ifndef __RACETASK_001
-#define __RACETASK_001
+#ifndef __MAINTASK_001
+#define __MIANTASK_001
 
 
 #define WORKMODE_VALID 0x80

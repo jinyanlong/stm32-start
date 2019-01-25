@@ -209,12 +209,10 @@ void hal_LF_QValPin_config(void){//a-pc15|b-pd2|m-pc11|n-pc4    0-OPEN
     GPIO_Init(GPIOC, &gpio_init);      
 }
 
-void hal_open_LFQVAL(UInt8 ant){
-    hal_LF_SetQValPin(LF_ANTA,0);
+void hal_LF_setQVAL(UInt8 ant,UInt8 val){
+    hal_LF_SetQValPin(LF_ANTA,val);
 }
-void hal_close_LFQVAL(UInt8 ant){
-    hal_LF_SetQValPin(LF_ANTA,1);
-}
+
 
 void hal_LF_config(void){
     hal_LF_OutPin_config();//–≈∫≈ ‰≥ˆ“˝Ω≈≈‰÷√
