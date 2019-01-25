@@ -5,7 +5,7 @@
 #define MCP4018T_2  0x02
 
 void hal_MCPI2C_config(void);
-void hal_MCPI2C_init(UInt8 val);
+void hal_MCPI2C_init(void);
 void hal_MCPI2C_start(UInt8 val);
 void hal_MCPI2C_stop(UInt8 val);
 void hal_MCPI2C_ack(UInt8 val);

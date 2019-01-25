@@ -34,22 +34,22 @@ __inline bool mcp1_sda_get(void){
 }
 
 __inline void mcp2_scl_1(void){
-    GPIOA_ODR_BIT(MCP2_SCL_PIN)=1;
+    GPIOB_ODR_BIT(MCP2_SCL_PIN)=1;
 	mcp_scl_delay();
 }
 __inline void mcp2_scl_0(void){
-    GPIOA_ODR_BIT(MCP2_SCL_PIN)=0;
+    GPIOB_ODR_BIT(MCP2_SCL_PIN)=0;
 	mcp_scl_delay();
 }
 __inline void mcp2_sda_1(void){
-    GPIOA_ODR_BIT(MCP2_SDA_PIN)=1;
+    GPIOB_ODR_BIT(MCP2_SDA_PIN)=1;
 }
 __inline void mcp2_sda_0(void){
-    GPIOA_ODR_BIT(MCP2_SDA_PIN)=0;
+    GPIOB_ODR_BIT(MCP2_SDA_PIN)=0;
 }
 __inline bool mcp2_sda_get(void){
-    GPIOA_ODR_BIT(MCP2_SDA_PIN)=1; 
-	if(GPIOA->IDR & (0x0001<<MCP1_SDA_PIN)){
+    GPIOB_ODR_BIT(MCP2_SDA_PIN)=1; 
+	if(GPIOB->IDR & (0x0001<<MCP2_SDA_PIN)){
 		return true;
 	}else{
 		return false;
@@ -142,14 +142,22 @@ void hal_MCPI2C_noack(uint8_t val){
 	}
 }
 
-void hal_MCPI2C_init(uint8_t val){ // 初始化
-	if(val==MCP4018T_1){
-		mcp1_sda_1();
-		mcp1_scl_1();
-	}else if(val==MCP4018T_2){
-		mcp2_sda_1();
-		mcp2_scl_1();	
-	}
+void hal_MCPI2C_init(void){ // 初始化
+    GPIO_InitTypeDef  gpio_init;
+
+	mcp1_sda_1();
+	mcp1_scl_1();
+	mcp2_sda_1();
+	mcp2_scl_1();	
+
+    gpio_init.GPIO_Speed=GPIO_Speed_50MHz;
+    gpio_init.GPIO_Pin  = 1<<MCP1_SCL_PIN|1<<MCP1_SDA_PIN;
+    gpio_init.GPIO_Mode = GPIO_Mode_Out_OD;
+    GPIO_Init(GPIOA, &gpio_init);
+
+	gpio_init.GPIO_Pin  = 1<<MCP2_SCL_PIN|1<<MCP2_SDA_PIN;
+    gpio_init.GPIO_Mode = GPIO_Mode_Out_OD;
+    GPIO_Init(GPIOB, &gpio_init);
 
 }
 

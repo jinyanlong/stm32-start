@@ -35,24 +35,26 @@ void appTaskStart(void){
     // pro=drv_adjust_LFCap(LF_ANTM);
     // pro=drv_adjust_LFCap(LF_ANTN);
 
-    // result=hal_MCP4018_read(MCP4018T_1,&val,1);
-    // result=hal_MCP4018_read(MCP4018T_2,&val,1);
+    result=hal_MCP4018_read(MCP4018T_1,&val,1);
+    result=hal_MCP4018_read(MCP4018T_2,&val,1);
 
-   result=drv_Flash_write(FLASHADDR_BASEINFO,&test,3);
-    result=drv_Flash_read(FLASHADDR_BASEINFO,&test1,3);
+//    result=drv_Flash_write(FLASHADDR_BASEINFO,&test,3);
+    // result=drv_Flash_read(FLASHADDR_BASEINFO,&test1,3);
 }
 
 void appInit(void){  
     drv_CPU_init(); 
     drv_Time_init();
     hal_AT24C64_init();
+    hal_MCPI2C_init();
     drv_LF_init();
 }
 
 void appConfig(void){
 	hal_CPU_config();  
     hal_RTC_config();
-    hal_AT24C64_config();   
+    hal_AT24C64_config();  
+    hal_MCP4018_config(); 
     hal_PcComm_config();
     hal_Led_config();
     drv_LF_config();
