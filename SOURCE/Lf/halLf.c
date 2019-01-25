@@ -184,15 +184,18 @@ void hal_LF_CapPin_config(void){
     GPIO_Init(GPIOC, &gpio_init);      
 }
 
+void hal_LF_setQVAL(UInt8 ant,UInt8 val){
+    hal_LF_SetQValPin(ant,val);
+}
 
 void hal_LF_QValPin_config(void){//a-pc15|b-pd2|m-pc11|n-pc4    0-OPEN
 	GPIO_InitTypeDef  gpio_init;
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC|RCC_APB2Periph_GPIOD|RCC_APB2Periph_AFIO,ENABLE);
 
-    hal_LF_SetQValPin(LF_ANTA,0x00);
-    hal_LF_SetQValPin(LF_ANTB,0x00);
-    hal_LF_SetQValPin(LF_ANTM,0x00);
-    hal_LF_SetQValPin(LF_ANTN,0x00);
+    hal_LF_setQVAL(LF_ANTA,0x00);
+    hal_LF_setQVAL(LF_ANTB,0x00);
+    hal_LF_setQVAL(LF_ANTM,0x00);
+    hal_LF_setQVAL(LF_ANTN,0x00);
 
 	gpio_init.GPIO_Speed=GPIO_Speed_50MHz;
     gpio_init.GPIO_Pin  = (1<<LF_NC1_PIN)|(1<<LF_NC2_PIN)|(1<<LF_NC3_PIN)|(1<<LF_NC4_PIN);
@@ -207,10 +210,6 @@ void hal_LF_QValPin_config(void){//a-pc15|b-pd2|m-pc11|n-pc4    0-OPEN
     gpio_init.GPIO_Pin  = (1<<LF_BC4_PIN)|(1<<LF_MC1_PIN)|(1<<LF_MC2_PIN)|(1<<LF_MC3_PIN)|(1<<LF_MC4_PIN);
     gpio_init.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(GPIOC, &gpio_init);      
-}
-
-void hal_LF_setQVAL(UInt8 ant,UInt8 val){
-    hal_LF_SetQValPin(LF_ANTA,val);
 }
 
 

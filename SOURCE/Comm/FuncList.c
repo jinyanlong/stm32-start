@@ -33,8 +33,11 @@ void (*FUNC_SECRITY[])(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp)={
 /////////////////////Ö÷½Ó¿Ú////////////////////////////
 void (*drv_CommFunc_Command[])(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp)={
     drv_CommFunc_setQVcc,
+    drv_CommFunc_getQVcc,
     drv_CommFunc_adjustLFC,
-    drv_CommFunc_setANTId
+    drv_CommFunc_getLFC,
+    drv_CommFunc_setANTId,
+    drv_CommFunc_getANTId
 };
 
 

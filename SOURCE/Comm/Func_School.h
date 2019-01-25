@@ -15,8 +15,11 @@
 void drv_CommFunc_clear(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 void drv_CommFunc_setSite(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 void drv_CommFunc_setQVcc(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
+void drv_CommFunc_getQVcc(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 void drv_CommFunc_adjustLFC(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
+void drv_CommFunc_getLFC(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 void drv_CommFunc_setANTId(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
+void drv_CommFunc_getANTId(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 
 void drv_CommFunc_lfSendDataNoAck(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);
 void drv_CommFunc_lfSendData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp);

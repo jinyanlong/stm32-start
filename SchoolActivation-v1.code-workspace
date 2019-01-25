@@ -28,7 +28,9 @@
 			"maintask.h": "c",
 			"realtimer.h": "c",
 			"lf.h": "c",
-			"commdriver.h": "c"
+			"commdriver.h": "c",
+			"halmcpi2c.h": "c",
+			"flash.h": "c"
 		},
 		"files.exclude": {
 			"**/LFActiverSchool": true

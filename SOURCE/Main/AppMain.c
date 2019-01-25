@@ -17,15 +17,20 @@ UInt8 s_systemId[4]={0,0,0,0};  //前2字节为代理商编号,后2字节为学校编号
 UInt32 s_systemMark=0;
 UInt8 s_systemKey[8];
 
-UInt16 m_antId=0x0011;
+UInt16 m_antIdA=0x0011;
+UInt16 m_antIdB=0x0011;
+UInt16 m_antIdM=0x0011;
+UInt16 m_antIdN=0x0011;
 
 extern UartPacketHandler _pcCommUart;
 
 void appTaskStart(void){
     UInt8 pro,val;
-    bool result;
-    uint8_t test1[3];
-    uint8_t test[3]={'a','b','c'};
+//    UInt8 vcc=0x15;
+//    UInt8 vcc1=0x26;
+     bool result;
+  //  uint8_t test1[3];
+  //  uint8_t test[3]={'a','b','c'};
 
     drv_MainTask_init();
     drv_TimeTick_init();
@@ -35,11 +40,16 @@ void appTaskStart(void){
     // pro=drv_adjust_LFCap(LF_ANTM);
     // pro=drv_adjust_LFCap(LF_ANTN);
 
+    // hal_MCP4018_write(MCP4018T_1,&vcc, 1);
+//     hal_MCP4018_write(MCP4018T_2,&vcc1, 1);
+
     result=hal_MCP4018_read(MCP4018T_1,&val,1);
     result=hal_MCP4018_read(MCP4018T_2,&val,1);
 
 //    result=drv_Flash_write(FLASHADDR_BASEINFO,&test,3);
     // result=drv_Flash_read(FLASHADDR_BASEINFO,&test1,3);
+
+
 }
 
 void appInit(void){  
@@ -70,9 +80,13 @@ void afterAppStartInit(void){
     ROM_PROXYID[1]=~(*(u8*)(ROM_ADDRESS_START+ROM_PAGESIZE*ROM_CONFIG_PAGE+3) );//@@1为什么放在两页
 
     fns_Flash_getSystemData(s_systemId,&s_systemMark,s_systemKey);
-    m_antId=fns_Flash_getAntId();
 
-    hal_UART_startRx(_pcCommUart.pUart);
+    m_antIdA=fns_Flash_getAntId(LF_ANTA);
+    m_antIdB=fns_Flash_getAntId(LF_ANTB);
+    m_antIdM=fns_Flash_getAntId(LF_ANTM);
+    m_antIdN=fns_Flash_getAntId(LF_ANTN);
+
+    drv_Comm_startRx(&_pcCommUart);
 
     _IsAppStarted=true;
 }

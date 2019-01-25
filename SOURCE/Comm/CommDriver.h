@@ -8,7 +8,7 @@
 #define CHAR_ETB 0x17
 #define CHAR_ESC 0x1B
 
-#define UART_CHAR_INTERVAL   5    //字符间隔ms
+#define UART_CHAR_INTERVAL   500    //字符间隔ms
 
 #define UART_PACKETSTATE_IDLE         0        //准备接收
 

@@ -40,7 +40,6 @@ void drv_PcComm_onEvent(void){//数据解析
     parser.state=UART_PACKETSTATE_IDLE;    
     parser.stream=(UInt8*)&_pcCommUart.cmdPacket;
     parser.eof=0;
-    _pcCommUart.lazyMode=false;
     
     drv_Comm_parseSTBPacket(&parser,_pcCommUart.stream+1,_pcCommUart.eof-1);//没有SOF
 
@@ -49,7 +48,6 @@ void drv_PcComm_onEvent(void){//数据解析
             drv_Led_start(LED_BLUE,2,100,-100);
 
             drv_Comm_onCommand(&pUartHandler->cmdPacket,&pUartHandler->rspPacket);
-            if(_pcCommUart.lazyMode) return;
 
             if(pUartHandler->rspPacket.CLA!=0){
                 UInt8 protocol=0x80; //无地址模式

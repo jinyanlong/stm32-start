@@ -50,20 +50,53 @@ void drv_CommFunc_setSite(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
     // drv_Data_flush();
 }
 
-// 电源号POWID(1B)+电源参数PPARA(1B)+天线ANTID(1B)+天线Q值参数QPARA(1B)
+// 天线电源号POWID(1B)+天线电源参数PPARA(1B)+天线1的Q值+天线2的Q值
 void drv_CommFunc_setQVcc(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
 
     if(fvCmd->LEN<4){
         drv_CommFunc_setError(fvRsp,ERRCODE_CMD_PARAMS);
         return;
     }
-    if(!_commVerify){
-        drv_CommFunc_setError(fvRsp,ERRCODE_SECRITY_PERMIT);
+    // if(!_commVerify){
+    //     drv_CommFunc_setError(fvRsp,ERRCODE_SECRITY_PERMIT);
+    //     return;
+    // }
+    if(fvCmd->PARAMS[0]==MCP4018T_1){
+        drv_LFset_LFQVAL(LF_ANTA,fvCmd->PARAMS[2]);
+        drv_LFset_LFQVAL(LF_ANTB,fvCmd->PARAMS[3]);
+        drv_SET_LFPOWVAL(MCP4018T_1,fvCmd->PARAMS[1]);
+    }else if(fvCmd->PARAMS[0]==MCP4018T_2){
+        drv_LFset_LFQVAL(LF_ANTM,fvCmd->PARAMS[2]);
+        drv_LFset_LFQVAL(LF_ANTN,fvCmd->PARAMS[3]);
+        drv_SET_LFPOWVAL(MCP4018T_2,fvCmd->PARAMS[1]); 
+   }else{
+        drv_CommFunc_setError(fvRsp,ERRCODE_CMD_PARAMS);
+   }
+}
+//返回：天线电源参数PPARA(1B)+天线1-Q值(1B)+天线2-Q值(1B)
+void drv_CommFunc_getQVcc(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
+
+    if(fvCmd->LEN<1){
+        drv_CommFunc_setError(fvRsp,ERRCODE_CMD_PARAMS);
         return;
     }
-
-    hal_LF_setQVAL(fvCmd->PARAMS[2],fvCmd->PARAMS[3]);
-    drv_SET_LFPOWVAL(fvCmd->PARAMS[0],fvCmd->PARAMS[1]);
+    // if(!_commVerify){
+    //     drv_CommFunc_setError(fvRsp,ERRCODE_SECRITY_PERMIT);
+    //     return;
+    // }
+    if(fvCmd->PARAMS[0]==MCP4018T_1){
+        fvRsp->PARAMS[0]=drv_GET_LFPOWVAL(MCP4018T_1);
+        fvRsp->PARAMS[1]=fns_Flash_getQVAL(LF_ANTA);
+        fvRsp->PARAMS[2]=fns_Flash_getQVAL(LF_ANTB);
+    }else if(fvCmd->PARAMS[0]==MCP4018T_2){
+        fvRsp->PARAMS[0]=drv_GET_LFPOWVAL(MCP4018T_2);
+        fvRsp->PARAMS[1]=fns_Flash_getQVAL(LF_ANTM);
+        fvRsp->PARAMS[2]=fns_Flash_getQVAL(LF_ANTN);
+   }else{
+        drv_CommFunc_setError(fvRsp,ERRCODE_CMD_PARAMS);
+        return;
+   }
+   fvRsp->LEN=3;
 }
 
 void drv_CommFunc_adjustLFC(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
@@ -71,25 +104,60 @@ void drv_CommFunc_adjustLFC(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
         drv_CommFunc_setError(fvRsp,ERRCODE_CMD_PARAMS);
         return;
     }
-    if(!_commVerify){
-        drv_CommFunc_setError(fvRsp,ERRCODE_SECRITY_PERMIT);
+    // if(!_commVerify){
+    //     drv_CommFunc_setError(fvRsp,ERRCODE_SECRITY_PERMIT);
+    //     return;
+    // }
+    if((fvCmd->PARAMS[0]>0)&&(fvCmd->PARAMS[0]<5)){
+        drv_adjust_LFCap(fvCmd->PARAMS[0]);
+    }else{
+        drv_CommFunc_setError(fvRsp,ERRCODE_CMD_PARAMS);
+    }
+}
+void drv_CommFunc_getLFC(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
+    if(fvCmd->LEN<1){
+        drv_CommFunc_setError(fvRsp,ERRCODE_CMD_PARAMS);
         return;
     }
-    drv_adjust_LFCap(fvCmd->PARAMS[0]);
+    // if(!_commVerify){
+    //     drv_CommFunc_setError(fvRsp,ERRCODE_SECRITY_PERMIT);
+    //     return;
+    // }
+    if((fvCmd->PARAMS[0]>0)&&(fvCmd->PARAMS[0]<5)){
+        fvRsp->PARAMS[0]=fns_Flash_getLFC(fvCmd->PARAMS[0]);
+        fvRsp->LEN=1;
+    }else{
+        drv_CommFunc_setError(fvRsp,ERRCODE_CMD_PARAMS);
+    }
+}
+// 天线位置(1B)+保留(1B)+天线号（2B）
+void drv_CommFunc_setANTId(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
+    UInt16 value;
+    if(fvCmd->LEN<4){
+        drv_CommFunc_setError(fvRsp,ERRCODE_CMD_PARAMS);
+        return;
+    }
+    // if(!_commVerify){
+    //     drv_CommFunc_setError(fvRsp,ERRCODE_SECRITY_PERMIT);
+    //     return;
+    // }
+    memcpy(&value,fvCmd->PARAMS+2,2);
+    fns_Flash_setAntId(fvCmd->PARAMS[0],value);
 }
 
-void drv_CommFunc_setANTId(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
-    UInt16 ant;
+void drv_CommFunc_getANTId(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
+    UInt16 value;
     if(fvCmd->LEN<2){
         drv_CommFunc_setError(fvRsp,ERRCODE_CMD_PARAMS);
         return;
     }
-    if(!_commVerify){
-        drv_CommFunc_setError(fvRsp,ERRCODE_SECRITY_PERMIT);
-        return;
-    }
-    memcpy(&ant,fvCmd->PARAMS,2);
-    fns_Flash_setAntId(ant);
+    // if(!_commVerify){
+    //     drv_CommFunc_setError(fvRsp,ERRCODE_SECRITY_PERMIT);
+    //     return;
+    // }
+    value=fns_Flash_getAntId(fvCmd->PARAMS[0]);
+    memcpy(fvRsp->PARAMS,&value,2);
+    fvRsp->LEN=2;
 }
 
 void drv_CommFunc_getApplyData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
@@ -230,7 +298,6 @@ void drv_CommFunc_lfSendData(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
     drv_LF_send(cmdData);
 
     _pcCommUart.rspTimout=drv_Time_getTick()+500;
-    _pcCommUart.lazyMode=true;
 
 }
 //2.4G指令转发

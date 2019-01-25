@@ -190,45 +190,16 @@ HRESULT hal_ROM_init(UInt8* params){
     FLASH_Lock();
     return hr;
 }
-//格式化标志(8B)+格式化参数(8B)
+//@@1数据有问题
 void drv_CommonFunc_formatDevice(FV_COMMAND* fvCmd,FV_RESPONSE* fvRsp){
     // HRESULT hr;
-    // int i;
-    if( fvCmd->LEN<16 ){
+    UInt32 sysId;
+    if( fvCmd->LEN<4 ){
         drv_CommFunc_setError(fvRsp,ERRCODE_CMD_PARAMS);
         return;
     }
-
-    // if(memcmp(S_FORMAT_FONT_TAG,fvCmd->PARAMS,8)==0){   //仅格式化字库
-    //     hal_Flash_eraseSector(FLASH_FLAG_SECTOR);
-    //     hal_Flash_setFlag(FLASH_FONT_PAGE,FLASH_FLAG_FONTNORMAL);
-    //     hal_Flash_setFlag(FLASH_DATA_PAGE,FLASH_FLAG_DATANORMAL);
-    //     //请求系统复位
-    //     drv_CPU_requestReset(500);
-    //     return;
-    // }else if(memcmp(S_FORMAT_DATA_TAG,fvCmd->PARAMS,8)==0){    //仅格式化数据
-    //     hal_Flash_eraseSector(FLASH_FLAG_SECTOR);
-    //     hal_Flash_setFlag(FLASH_DATA_PAGE,FLASH_FLAG_FORMAT);
-    //     hal_Flash_setFlag(FLASH_FONT_PAGE,FLASH_FLAG_FONTNORMAL);
-    // }else if(memcmp(S_FORMAT_ALL_TAG,fvCmd->PARAMS,8)==0){
-    //     hal_Flash_eraseSector(FLASH_FLAG_SECTOR);
-    //     hal_Flash_setFlag(FLASH_DATA_PAGE,FLASH_FLAG_FORMAT);
-    //     hal_Flash_setFlag(FLASH_FONT_PAGE,FLASH_FLAG_FORMAT);
-    // }else{
-    //     drv_CommFunc_setError(fvRsp,ERRCODE_CMD_PARAMS);
-    //     return;
-    // }
-    
-    // hr=hal_ROM_init(fvCmd->PARAMS+8);
-    // if(hr!=S_OK){
-    //     drv_CommFunc_setError(fvRsp,hr);
-    //     return;    
-    // }
-    // memcpy(fvRsp->PARAMS,(void*)(ROM_ADDRESS_START+ROM_CONFIG_PAGE*ROM_PAGESIZE),8);
-    // for( i=0;i<8;i++){
-    //     fvRsp->PARAMS[i]=~fvRsp->PARAMS[i];
-    // }
-    // fvRsp->LEN=8;
+    memcpy(&sysId,fvCmd->PARAMS,4);
+    fns_Flash_setSystemData(sysId,NULL,NULL);
     
     //请求系统复位
     drv_CPU_requestReset(500);

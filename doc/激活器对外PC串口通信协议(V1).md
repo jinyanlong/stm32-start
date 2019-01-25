@@ -405,7 +405,7 @@
 		INS=0x01   
 		PARAMS=天线电源号POWID(1B)
 	应答:
-		PARAMS=天线电源参数PPARA(1B)+天线1-Q值(1B)+天线2-Q值(1B)
+		PARAMS=天线1-Q值(1B)+天线2-Q值(1B)+天线电源参数PPARA(1B)+保留(1B)天线电源电压(float)(4B)
 	参数说明：
 		POWID:1~2
 		PPARA:0~0x7F

@@ -42,7 +42,7 @@ bool hal_MCP4018_write(UInt8 mcpNO,void * pData,UInt16 nLen){
 	}
 
 	for(i=0;i<nLen;i++){
-		if( !hal_MCPI2C_send(mcpNO,((u8*)pData)[i]) ){
+		if( !hal_MCPI2C_send(mcpNO,((u8*)pData)[i])&0x7F ){
 			return false;
 		}
 	}

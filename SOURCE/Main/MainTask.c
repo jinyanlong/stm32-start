@@ -7,6 +7,7 @@
 #include "halLf.h"
 #include "PcComm.h"
 #include "CommDriver.h"
+#include "lf.h"
 
 UInt8 _systemRnd[8];
 DESKEYSTRUCT desKey; //desKey实际上是局部变量,提升至全局,是为了减少栈空间消耗
@@ -30,17 +31,26 @@ extern UartPacketHandler _pcCommUart;
 void drv_MainTask_onTick(void){
     static UInt32 tickOut=0;
     UInt32 nowTick;
-    FV_PACKET rspPacket;
+
+    uint32_t powv;
+    static UInt8 vcc=0;
+
     s_main_activeTick=nowTick=drv_Time_getTick();
 
     if(nowTick>tickOut){
-        tickOut=nowTick+1000;
+
         drv_Led_start(LED_RED,1,200,0);
 
         // drv_LF_send(0x0011);
 
-        // rspPacket.CLA=0x01;
-        // drv_Comm_sendPacket(_pcCommUart.pUart,0,&rspPacket);
+        vcc++;
+        if(vcc>0x7F){vcc=0;} 
+            
+        hal_MCP4018_write(MCP4018T_1,&vcc, 1);
+        powv=drv_GET_LFPOWVCC(MCP4018T_1);//天线电源电压
+
+        
+        tickOut=nowTick+1000;
     }
 
 
