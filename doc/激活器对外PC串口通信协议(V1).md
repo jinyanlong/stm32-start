@@ -393,52 +393,63 @@
 ###### 6.6.1 Q值调整和天线电源电压调整
 	发送:
 		INS=0x00   
-		PARAMS=天线电源号POWID(1B)+天线电源参数PPARA(1B)+天线ANTID(1B)+天线Q值参数QPARA(1B)
+		PARAMS=天线电源号POWID(1B)+天线电源参数PPARA(1B)+天线1的Q值+天线2的Q值
 	应答:
 		PARAMS=(无)
 	参数说明：
 		POWID:1~2
-		PPARA:0~0X3F
-		ANTID:1~4
-		QPARA:0-开  1-关
+		PPARA:0~0x7F
+		Q值:0-开,1-关
 ###### 6.6.2 获取Q值和获取天线电源参数
 	发送:
 		INS=0x01   
-		PARAMS=天线电源号POWID(1B)+天线ANTID(1B)
+		PARAMS=天线电源号POWID(1B)
 	应答:
-		PARAMS=天线电源号POWID(1B)+天线电源参数PPARA(1B)+天线ANTID(1B)+天线Q值参数QPARA(1B)
+		PARAMS=天线电源参数PPARA(1B)+天线1-Q值(1B)+天线2-Q值(1B)
 	参数说明：
 		POWID:1~2
-		PPARA:0~0X3F
+		PPARA:0~0x7F
 		ANTID:1~4
-		QPARA:0-开  1-关
-		
+		Q值:  0-开  1-关
+
 ###### 6.6.3 电容调整
 	发送:
 		INS=0x02   
-		PARAMS=天线ANTID(1B)
+		PARAMS=天线位置(1B)
 	应答:
 		PARAMS=(无)
 	参数说明：
+		天线位置: 1~4
 
 ###### 6.6.4 获取电容比例参数
 	发送:
 		INS=0x03   
 		PARAMS=天线ANTID(1B)
 	应答:
-		PPARAMS=电容比例参数(1B)
+		PPARAMS=电容大小(1B)
 	参数说明：
-		PPARAMS:bit1=1-C1开
-				bit2=0-C2关
-				.....
+		电容大小: 0~15
 
 ###### 6.6.5 设置天线号
 	发送:
 		INS=0x04   
-		PARAMS=天线号（2B）
+		PARAMS=天线位置(1B)+保留(1B)+天线号（2B）
 	应答:
 		PARAMS=(无)
 	参数说明：
+
+###### 6.6.6 获取天线号
+
+```
+发送:
+	INS=0x04   
+	PARAMS=天线位置(1B)+保留(1B)
+应答:
+	PARAMS=天线号（2B）
+参数说明：
+```
+
+
 
 
 
